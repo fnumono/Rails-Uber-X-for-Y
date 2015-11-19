@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+
 ruby '2.2.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -49,5 +50,8 @@ group :production do
 end
 
 ########################################
-gem 'devise_token_auth'
+gem 'devise_token_auth' , github: 'lynndylanhurley/devise_token_auth'
 gem 'pg'
+gem 'omniauth-facebook'
+gem 'config'
+gem 'rack-cors', :require => 'rack/cors'
