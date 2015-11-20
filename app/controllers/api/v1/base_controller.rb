@@ -1,5 +1,7 @@
 #Base controller which inherited by every api controller
 class Api::V1::BaseController < ActionController::Base
+  include DeviseTokenAuth::Concerns::SetUserByToken
+
   respond_to :json
   # skip_before_filter  :verify_authenticity_token    # disable csrf token verify skips the :verify_authenticity_token filter.
   # before_filter :cors_set_headers
