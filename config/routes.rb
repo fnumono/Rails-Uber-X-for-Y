@@ -1,7 +1,14 @@
 Rails.application.routes.draw do
+  mount_devise_token_auth_for 'Client', at: 'api/v1/auth'
 
   namespace :api, defaults: { format: :json }  do
     namespace :v1 do
+      #####################################################
+      ###   never use this followed routing style .
+      ###   use route above
+      # mount_devise_token_auth_for 'Client', at: 'auth'
+      #####################################################
+
       get 'test' => 'base#test'
     end
   end
