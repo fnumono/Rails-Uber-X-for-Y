@@ -11,11 +11,11 @@ class Client < ActiveRecord::Base
   
   def attributes
   	a = super
-  	a[:photo_url] = nil
+  	a[:photoUrl] = nil
   	a
   end
 
-  def photo_url
+  def photoUrl
   	Settings.host_url + photo.url(:thumb) if !photo.url.nil?
   end
 
