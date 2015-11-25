@@ -7,6 +7,11 @@ Rails.application.routes.draw do
       ###   never use this followed routing style .
       ###   use route above
       # mount_devise_token_auth_for 'Client', at: 'auth'
+
+  mount_devise_token_auth_for 'Provider', at: 'api/v1/provider_auth'
+  as :provider do
+    # Define routes for Provider within this block.
+  end
       #####################################################
 
       get 'test' => 'base#test'
