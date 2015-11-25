@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151125085218) do
+ActiveRecord::Schema.define(version: 20151125174336) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,6 +78,16 @@ ActiveRecord::Schema.define(version: 20151125085218) do
     t.json     "tokens"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "fname"
+    t.string   "lname"
+    t.string   "address1"
+    t.string   "address2"
+    t.string   "phone1"
+    t.string   "phone2"
+    t.string   "photo_file_name"
+    t.string   "photo_content_type"
+    t.integer  "photo_file_size"
+    t.datetime "photo_updated_at"
   end
 
   add_index "providers", ["email"], name: "index_providers_on_email", using: :btree
