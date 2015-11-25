@@ -16,7 +16,7 @@ class Client < ActiveRecord::Base
   end
 
   def photo_url
-  	Settings.host_url + photo.url(:thumb)
+  	Settings.host_url + photo.url(:thumb) if !photo.url.nil?
   end
 
 end
