@@ -1,4 +1,6 @@
-Rails.application.routes.draw do
+Rails.application.routes.draw do  
+  devise_for :superadmins, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
   mount_devise_token_auth_for 'Client', at: 'api/v1/auth'
   mount_devise_token_auth_for 'Provider', at: 'api/v1/provider_auth'
   as :provider do

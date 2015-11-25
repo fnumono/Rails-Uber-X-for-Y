@@ -5,3 +5,4 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+Superadmin.create!(email: 'superadmin@zoomerrands.com', password: 'password', password_confirmation: 'password')
