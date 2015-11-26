@@ -64,6 +64,21 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
+  # ActionMailer Config
+  config.action_mailer.default_url_options = { :host => 'http://zoomerrands.herokuapp.com' }
+  config.action_mailer.delivery_method = :smtp
+  #############  config mailer for gmail  ########################
+  config.action_mailer.smtp_settings = {
+      address: "smtp.mandrillapp.com",
+      port: 587,
+      domain: "http://zoomerrands.herokuapp.com" ,
+      authentication: "plain",
+      enable_starttls_auto: true,
+      user_name: "huangxiaoxuan61@yahoo.com",#Rails.application.secrets.email_provider_username,
+      password: "3NEQ1cFwBK3qsBiQKgIxJA"#Rails.application.secrets.email_provider_password
+  }
+
+
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
