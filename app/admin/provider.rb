@@ -1,15 +1,15 @@
-ActiveAdmin.register Client do
+ActiveAdmin.register Provider do
 
-	# See permitted parameters documentation:
-	# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-	#
-	permit_params :fname, :lname, :email, :address1, :address2, :phone1, :phone2, :photo	
+# See permitted parameters documentation:
+# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
+#
+permit_params :fname, :lname, :email, :address1, :address2, :phone1, :phone2, :photo	
 
 	index do
 		selectable_column
 	  column :id 
-	  column :photo do |client|
-	  	image_tag(client.photo.url(:thumb))
+	  column :photo do |provider|
+	  	image_tag(provider.photo.url(:thumb))
 	  end
 	  column :email
 	  column :fname
@@ -25,7 +25,7 @@ ActiveAdmin.register Client do
 	form do |f|
 	  f.semantic_errors # shows errors on :base
 	  
-	  f.inputs "Client" do          # builds an input field for every attribute
+	  f.inputs "Provider" do          # builds an input field for every attribute
 	  	f.input :email
 	  	f.input :fname
 	  	f.input :lname
