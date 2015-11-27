@@ -16,8 +16,14 @@
 !/log/.keep
 /tmp
 /.idea
-# /public/assets
+
 /public/system
+
+public/assets/jquery-ui/
+public/assets/active_admin/
+public/assets/.sprockets*
+public/assets/active_admin*
+public/assets/application*
 
 
 config/settings.local.yml
