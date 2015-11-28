@@ -15,6 +15,12 @@ Rails.application.routes.draw do
       ###   use route above
       # mount_devise_token_auth_for 'Client', at: 'auth'  
       #####################################################
+      namespace :provider do
+        put 'setting' => 'setting#update'
+      end
+
+      namespace :client do
+      end
 
       get 'test' => 'base#test'
     end

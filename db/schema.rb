@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151125190347) do
+ActiveRecord::Schema.define(version: 20151128155411) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,13 +71,13 @@ ActiveRecord::Schema.define(version: 20151125190347) do
   add_index "clients", ["uid", "provider"], name: "index_clients_on_uid_and_provider", unique: true, using: :btree
 
   create_table "providers", force: :cascade do |t|
-    t.string   "provider",               default: "email", null: false
-    t.string   "uid",                    default: "",      null: false
-    t.string   "encrypted_password",     default: "",      null: false
+    t.string   "provider",                    default: "email", null: false
+    t.string   "uid",                         default: "",      null: false
+    t.string   "encrypted_password",          default: "",      null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,       null: false
+    t.integer  "sign_in_count",               default: 0,       null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -103,11 +103,31 @@ ActiveRecord::Schema.define(version: 20151125190347) do
     t.string   "photo_content_type"
     t.integer  "photo_file_size"
     t.datetime "photo_updated_at"
+    t.string   "driverlicense_file_name"
+    t.string   "driverlicense_content_type"
+    t.integer  "driverlicense_file_size"
+    t.datetime "driverlicense_updated_at"
+    t.string   "proofinsurance_file_name"
+    t.string   "proofinsurance_content_type"
+    t.integer  "proofinsurance_file_size"
+    t.datetime "proofinsurance_updated_at"
   end
 
   add_index "providers", ["email"], name: "index_providers_on_email", using: :btree
   add_index "providers", ["reset_password_token"], name: "index_providers_on_reset_password_token", unique: true, using: :btree
   add_index "providers", ["uid", "provider"], name: "index_providers_on_uid_and_provider", unique: true, using: :btree
+
+  create_table "settings", force: :cascade do |t|
+    t.integer  "provider_id"
+    t.datetime "a1099"
+    t.datetime "noncompete"
+    t.datetime "confidentiality"
+    t.datetime "delivery"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "settings", ["provider_id"], name: "index_settings_on_provider_id", using: :btree
 
   create_table "superadmins", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -127,4 +147,5 @@ ActiveRecord::Schema.define(version: 20151125190347) do
   add_index "superadmins", ["email"], name: "index_superadmins_on_email", unique: true, using: :btree
   add_index "superadmins", ["reset_password_token"], name: "index_superadmins_on_reset_password_token", unique: true, using: :btree
 
+  add_foreign_key "settings", "providers"
 end

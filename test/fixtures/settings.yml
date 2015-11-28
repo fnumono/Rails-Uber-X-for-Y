@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  provider_id: 
+  a1099: 2015-11-28 23:54:11
+  noncompete: 2015-11-28 23:54:11
+  confidentiality: 2015-11-28 23:54:11
+  delivery: 2015-11-28 23:54:11
+
+two:
+  provider_id: 
+  a1099: 2015-11-28 23:54:11
+  noncompete: 2015-11-28 23:54:11
+  confidentiality: 2015-11-28 23:54:11
+  delivery: 2015-11-28 23:54:11

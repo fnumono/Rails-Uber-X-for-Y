@@ -3,7 +3,8 @@ class Api::V1::BaseController < ActionController::Base
   include DeviseTokenAuth::Concerns::SetUserByToken
   respond_to :json
 
-  before_action :authenticate_client!, only: [:test]
+  # before_action :authenticate_client!, only: [:test]
+  
   # skip_before_filter  :verify_authenticity_token    # disable csrf token verify skips the :verify_authenticity_token filter.
   # before_filter :cors_set_headers
   #
