@@ -6,6 +6,8 @@ class Provider < ActiveRecord::Base
           :confirmable, :omniauthable
   include DeviseTokenAuth::Concerns::User
 
+  after_create :create_setting
+
   has_attached_file :photo, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "/images/:style/missing.png"
   validates_attachment_content_type :photo, content_type: /\Aimage\/.*\Z/
 
@@ -24,6 +26,13 @@ class Provider < ActiveRecord::Base
   def photoUrl
   	Settings.host_url + photo.url(:thumb) if !photo.url.nil?
   end
+
+  private
+
+  def create_setting
+    Setting.create!(provider_id: id)
+  end
+
 
 end
 
