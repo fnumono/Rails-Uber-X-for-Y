@@ -17,10 +17,35 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :phone2, :p
 	  column :address1
 	  column :address2
 	  column :phone1
-	  column :phone2	  
+	  column :phone2	
+	  column :setting  
 	  
 	  actions	
 	end
+
+	show do
+    attributes_table do
+      row :email
+      row :photo do |provider|
+        image_tag provider.photo.url(:thumb)
+      end
+      row :fname
+      row :lname
+      row :address1
+      row :address2
+      row :phone1
+      row :phone2      
+      row :driverlicense do |provider|
+      	link_to provider.driverlicense.url, provider.driverlicense.url
+      end
+      row :proofinsurance do |provider|
+      	link_to provider.proofinsurance.url, provider.proofinsurance.url
+      end	
+      row :setting
+      
+    end
+    active_admin_comments
+  end
 
 	form do |f|
 	  f.semantic_errors # shows errors on :base
@@ -33,7 +58,7 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :phone2, :p
 	  	f.input :address2
 	  	f.input :phone1
 	  	f.input :phone2
-	  	# f.input :lname
+	  	# f.input :
 	  	
 	  end	
 
