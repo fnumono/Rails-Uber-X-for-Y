@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151128155411) do
+ActiveRecord::Schema.define(version: 20151130033748) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -119,15 +119,25 @@ ActiveRecord::Schema.define(version: 20151128155411) do
 
   create_table "settings", force: :cascade do |t|
     t.integer  "provider_id"
-    t.datetime "a1099"
-    t.datetime "noncompete"
-    t.datetime "confidentiality"
-    t.datetime "delivery"
+    t.date     "a1099"
+    t.date     "noncompete"
+    t.date     "confidentiality"
+    t.date     "delivery"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.boolean  "sms"
+    t.boolean  "email"
   end
 
   add_index "settings", ["provider_id"], name: "index_settings_on_provider_id", using: :btree
+
+  create_table "settings_types", force: :cascade do |t|
+    t.integer "setting_id"
+    t.integer "type_id"
+  end
+
+  add_index "settings_types", ["setting_id"], name: "index_settings_types_on_setting_id", using: :btree
+  add_index "settings_types", ["type_id"], name: "index_settings_types_on_type_id", using: :btree
 
   create_table "superadmins", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -147,5 +157,14 @@ ActiveRecord::Schema.define(version: 20151128155411) do
   add_index "superadmins", ["email"], name: "index_superadmins_on_email", unique: true, using: :btree
   add_index "superadmins", ["reset_password_token"], name: "index_superadmins_on_reset_password_token", unique: true, using: :btree
 
+  create_table "types", force: :cascade do |t|
+    t.string   "name"
+    t.string   "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "settings", "providers"
+  add_foreign_key "settings_types", "settings"
+  add_foreign_key "settings_types", "types"
 end
