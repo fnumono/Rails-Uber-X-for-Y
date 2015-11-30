@@ -65,13 +65,13 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # ActionMailer Config
-  config.action_mailer.default_url_options = { :host => 'http://zoomerrands.herokuapp.com' }
+  config.action_mailer.default_url_options = { :host => 'http://52.8.215.245' }
   config.action_mailer.delivery_method = :smtp
   #############  config mailer for gmail  ########################
   config.action_mailer.smtp_settings = {
       address: "smtp.mandrillapp.com",
       port: 587,
-      domain: "http://zoomerrands.herokuapp.com" ,
+      domain: "http://52.8.215.245" ,
       authentication: "plain",
       enable_starttls_auto: true,
       user_name: "huangxiaoxuan61@yahoo.com",#Rails.application.secrets.email_provider_username,
