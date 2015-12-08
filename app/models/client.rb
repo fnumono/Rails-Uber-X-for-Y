@@ -5,7 +5,7 @@ class Client < ActiveRecord::Base
           :confirmable, :omniauthable
   include DeviseTokenAuth::Concerns::User
 
-  has_attached_file :photo, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "/images/:style/missing.png"
+  has_attached_file :photo, styles: { medium: "300x300>", thumb: "160x160!" }, default_url: "/images/:style/missing.png"
   validates_attachment_content_type :photo, content_type: /\Aimage\/.*\Z/
 
   
@@ -15,8 +15,7 @@ class Client < ActiveRecord::Base
   	a
   end
 
-  def photoUrl
+  def photoUrl  
   	Settings.host_url + photo.url(:thumb) if !photo.url.nil?
-  end
-
+  end  
 end

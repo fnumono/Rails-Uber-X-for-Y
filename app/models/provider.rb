@@ -8,23 +8,33 @@ class Provider < ActiveRecord::Base
 
   after_create :create_setting
 
-  has_attached_file :photo, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "/images/:style/missing.png"
+  has_attached_file :photo, styles: { medium: "300x300>", thumb: "160x160!" } , default_url: "/images/:style/missing.png"
   validates_attachment_content_type :photo, content_type: /\Aimage\/.*\Z/
 
-  has_attached_file :driverlicense, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "/images/:style/missing.png"
+  has_attached_file :driverlicense, styles: { medium: "300x300>", thumb: "300x100!" }, default_url: "/images/:style/missing.png"
   validates_attachment_content_type :driverlicense, content_type: /\Aimage\/.*\Z/
 
-  has_attached_file :proofinsurance, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "/images/:style/missing.png"
+  has_attached_file :proofinsurance, styles: { medium: "300x300>", thumb: "300x100!" }, default_url: "/images/:style/missing.png"
   validates_attachment_content_type :proofinsurance, content_type: /\Aimage\/.*\Z/
 
   def attributes
   	a = super
   	a[:photoUrl] = nil
+    a[:driverUrl] = nil
+    a[:proofUrl] = nil
   	a
   end
 
   def photoUrl
   	Settings.host_url + photo.url(:thumb) if !photo.url.nil?
+  end
+
+  def driverUrl
+    Settings.host_url + driverlicense.url(:thumb) if !driverlicense.url.nil?
+  end
+
+  def proofUrl
+    Settings.host_url + proofinsurance.url(:thumb) if !proofinsurance.url.nil?
   end
 
   private
