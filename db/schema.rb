@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151130033748) do
+ActiveRecord::Schema.define(version: 20151209021334) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -111,6 +111,9 @@ ActiveRecord::Schema.define(version: 20151130033748) do
     t.string   "proofinsurance_content_type"
     t.integer  "proofinsurance_file_size"
     t.datetime "proofinsurance_updated_at"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
   end
 
   add_index "providers", ["email"], name: "index_providers_on_email", using: :btree

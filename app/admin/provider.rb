@@ -3,7 +3,7 @@ ActiveAdmin.register Provider do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :fname, :lname, :email, :address1, :address2, :phone1, :phone2, :photo	
+permit_params :fname, :lname, :email, :address1, :address2, :phone1, :phone2, :photo, :city, :state, :zip	
 
 	index do
 		selectable_column
@@ -15,9 +15,12 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :phone2, :p
 	  column :fname
 	  column :lname	  
 	  column :address1
-	  column :address2
+	  column :city
+	  column :state
+	  column :zip
+	  # column :address2
 	  column :phone1
-	  column :phone2	
+	  # column :phone2	
 	  column :setting  
 	  
 	  actions	
@@ -32,9 +35,12 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :phone2, :p
       row :fname
       row :lname
       row :address1
-      row :address2
+      # row :address2
+      row :city
+      row :state
+      row :zip
       row :phone1
-      row :phone2      
+      # row :phone2      
       row :driverlicense do |provider|
       	link_to provider.driverlicense.url, provider.driverlicense.url
       end
@@ -55,9 +61,12 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :phone2, :p
 	  	f.input :fname
 	  	f.input :lname
 	  	f.input :address1
-	  	f.input :address2
+	  	# f.input :address2
+	  	f.input :city
+	  	f.input :state
+	  	f.input :zip
 	  	f.input :phone1
-	  	f.input :phone2
+	  	# f.input :phone2
 	  	# f.input :
 	  	
 	  end	
