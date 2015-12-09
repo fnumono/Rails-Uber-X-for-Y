@@ -1,1 +1,5 @@
 host_url: http://localhost:3000
+
+facebook:
+ key: 1724095974486718
+ secret: 0313f4e1a4cb8e894a741f2f888d0be2
