@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  datetime: 2015-12-19 19:02:52
+  address: MyString
+  contact: MyString
+  details: MyText
+  escrowable: false
+  client_id: 
+  provider_id: 
+  usedHour: 1.5
+  usedEscrow: 1.5
+  status: MyString
+
+two:
+  title: MyString
+  datetime: 2015-12-19 19:02:52
+  address: MyString
+  contact: MyString
+  details: MyText
+  escrowable: false
+  client_id: 
+  provider_id: 
+  usedHour: 1.5
+  usedEscrow: 1.5
+  status: MyString

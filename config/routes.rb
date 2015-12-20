@@ -15,14 +15,13 @@ Rails.application.routes.draw do
       ###   use route above
       # mount_devise_token_auth_for 'Client', at: 'auth'  
       #####################################################
-      namespace :provider do
+      scope ':agent' do
         get 'setting' => 'setting#index'
         put 'setting' => 'setting#update'
         get 'types' => 'types#index'
         put 'types' => 'types#update'
-      end
-
-      namespace :client do
+        get 'alltypes' => 'types#alltypes'
+        resources :tasks
       end
 
       get 'all_types' => 'base#all_job_types'

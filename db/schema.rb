@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151209021334) do
+ActiveRecord::Schema.define(version: 20151219111626) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -126,10 +126,10 @@ ActiveRecord::Schema.define(version: 20151209021334) do
     t.date     "noncompete"
     t.date     "confidentiality"
     t.date     "delivery"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.boolean  "sms"
-    t.boolean  "email"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.boolean  "sms",             default: true
+    t.boolean  "email",           default: true
   end
 
   add_index "settings", ["provider_id"], name: "index_settings_on_provider_id", using: :btree
@@ -160,6 +160,38 @@ ActiveRecord::Schema.define(version: 20151209021334) do
   add_index "superadmins", ["email"], name: "index_superadmins_on_email", unique: true, using: :btree
   add_index "superadmins", ["reset_password_token"], name: "index_superadmins_on_reset_password_token", unique: true, using: :btree
 
+  create_table "task_uploads", force: :cascade do |t|
+    t.integer  "task_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "task_uploads", ["task_id"], name: "index_task_uploads_on_task_id", using: :btree
+
+  create_table "tasks", force: :cascade do |t|
+    t.string   "title"
+    t.datetime "datetime"
+    t.string   "address"
+    t.string   "contact"
+    t.text     "details"
+    t.boolean  "escrowable"
+    t.integer  "client_id"
+    t.integer  "provider_id"
+    t.float    "usedHour"
+    t.float    "usedEscrow"
+    t.string   "status"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "tasks", ["client_id"], name: "index_tasks_on_client_id", using: :btree
+  add_index "tasks", ["provider_id"], name: "index_tasks_on_provider_id", using: :btree
+
+  create_table "tasks_types", id: false, force: :cascade do |t|
+    t.integer "task_id"
+    t.integer "type_id"
+  end
+
   create_table "types", force: :cascade do |t|
     t.string   "name"
     t.string   "comment"
@@ -170,4 +202,7 @@ ActiveRecord::Schema.define(version: 20151209021334) do
   add_foreign_key "settings", "providers"
   add_foreign_key "settings_types", "settings"
   add_foreign_key "settings_types", "types"
+  add_foreign_key "task_uploads", "tasks"
+  add_foreign_key "tasks", "clients"
+  add_foreign_key "tasks", "providers"
 end

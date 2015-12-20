@@ -58,4 +58,3 @@ gem 'rack-cors', :require => 'rack/cors'
 gem "paperclip", "~> 4.3"
 gem 'activeadmin', '~> 1.0.0.pre2'
 gem 'select2-rails'
-gem 'omniauth-facebook'

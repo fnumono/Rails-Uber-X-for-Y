@@ -1,7 +1,11 @@
 #Base controller which inherited by every api controller
-class Api::V1::Provider::TypesController < Api::V1::BaseController  
-  before_action :authenticate_provider!
+class Api::V1::TypesController < Api::V1::BaseController  
+  before_action :authenticate_provider!, except: [:alltypes]
  
+  def alltypes
+    render json: Type.all
+  end
+
   def index
     resp = []
     Type.all.each do |type|
@@ -12,9 +16,7 @@ class Api::V1::Provider::TypesController < Api::V1::BaseController
     render json: {types: resp}
   end
 
-  def show
-    
-  end
+
 
   def update
     my_types = []

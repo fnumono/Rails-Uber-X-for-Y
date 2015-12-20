@@ -1,6 +1,8 @@
 class Provider < ActiveRecord::Base
   # Include default devise modules.
   has_one :setting, dependent: :destroy
+  has_many :tasks
+  
   devise :database_authenticatable, :registerable,
           :recoverable, :rememberable, :trackable, :validatable,
           :confirmable, :omniauthable

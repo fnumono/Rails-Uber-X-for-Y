@@ -1,5 +1,5 @@
 #Base controller which inherited by every api controller
-class Api::V1::Provider::SettingController < Api::V1::BaseController  
+class Api::V1::SettingController < Api::V1::BaseController  
   before_action :authenticate_provider!
  
   def index
