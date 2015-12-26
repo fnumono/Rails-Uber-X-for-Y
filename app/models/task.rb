@@ -1,7 +1,7 @@
 class Task < ActiveRecord::Base
   belongs_to :client
   belongs_to :provider
-  has_and_belongs_to_many :types
+  belongs_to :type
   has_many :task_uploads
 
   accepts_nested_attributes_for :task_uploads
@@ -10,7 +10,7 @@ class Task < ActiveRecord::Base
   	a = super
   	a[:client] = nil
   	a[:provider] = nil
-  	a[:types] = nil
+  	a[:type] = nil
   	a
   end
 

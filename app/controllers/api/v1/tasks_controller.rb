@@ -17,9 +17,9 @@ class Api::V1::TasksController < Api::V1::BaseController
     end
     task = Task.new(task_params)
     task.client = current_client
-    task.status = 'submitted'
+    task.status = 'open'
       if task.save
-        render json: {task: task}, status: :ok
+        render json: task, status: :created
       else
         render json: {errors: task.errors}, status: 401
       end
@@ -27,25 +27,25 @@ class Api::V1::TasksController < Api::V1::BaseController
 
   def show
     task = current_agent.tasks.find(params[:id])
-    render json: {task: task}
+    render json: task
   end
 
   def update
     task = current_agent.tasks.find(params[:id])
     if task.update(task_params)
-      render json: {task: task}
+      render json: task
     else
       render json: {error: task.errors.messages}, status: 403
     end
   end
 
-  private    
+  private
     def task_params
       if client_signed_in?
-        params.require(:task).permit(:title, :datetime, :address, :contact, :types, \
-                  :details, :escrowable, :usedHour, :usedEscrow, :task_uploads_attributes[:id, :upload])
+        params.require(:task).permit(:title, :datetime, :address, :contact, :type_id, \
+                  :details, :escrowable)
       elsif provider_signed_in?
-        params.require(:task).permit(:usedHour, :usedEscrow, :task_uploads_attributes[:id, :upload])
+        params.require(:task).permit(:usedHour, :usedEscrow, :status)
       end  
     end
 end

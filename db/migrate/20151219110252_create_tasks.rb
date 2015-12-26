@@ -9,6 +9,7 @@ class CreateTasks < ActiveRecord::Migration
       t.boolean :escrowable
       t.references :client, index: true, foreign_key: true
       t.references :provider, index: true, foreign_key: true
+      t.references :type, index: true, foreign_key: true
       t.float :usedHour
       t.float :usedEscrow
       t.string :status

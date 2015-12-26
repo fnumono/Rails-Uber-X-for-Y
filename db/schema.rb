@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151219111626) do
+ActiveRecord::Schema.define(version: 20151224101308) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,9 @@ ActiveRecord::Schema.define(version: 20151219111626) do
     t.string   "photo_content_type"
     t.integer  "photo_file_size"
     t.datetime "photo_updated_at"
+    t.string   "state"
+    t.string   "city"
+    t.string   "zip"
   end
 
   add_index "clients", ["email"], name: "index_clients_on_email", using: :btree
@@ -134,7 +137,7 @@ ActiveRecord::Schema.define(version: 20151219111626) do
 
   add_index "settings", ["provider_id"], name: "index_settings_on_provider_id", using: :btree
 
-  create_table "settings_types", force: :cascade do |t|
+  create_table "settings_types", id: false, force: :cascade do |t|
     t.integer "setting_id"
     t.integer "type_id"
   end
@@ -177,6 +180,7 @@ ActiveRecord::Schema.define(version: 20151219111626) do
     t.boolean  "escrowable"
     t.integer  "client_id"
     t.integer  "provider_id"
+    t.integer  "type_id"
     t.float    "usedHour"
     t.float    "usedEscrow"
     t.string   "status"
@@ -186,11 +190,7 @@ ActiveRecord::Schema.define(version: 20151219111626) do
 
   add_index "tasks", ["client_id"], name: "index_tasks_on_client_id", using: :btree
   add_index "tasks", ["provider_id"], name: "index_tasks_on_provider_id", using: :btree
-
-  create_table "tasks_types", id: false, force: :cascade do |t|
-    t.integer "task_id"
-    t.integer "type_id"
-  end
+  add_index "tasks", ["type_id"], name: "index_tasks_on_type_id", using: :btree
 
   create_table "types", force: :cascade do |t|
     t.string   "name"
@@ -205,4 +205,5 @@ ActiveRecord::Schema.define(version: 20151219111626) do
   add_foreign_key "task_uploads", "tasks"
   add_foreign_key "tasks", "clients"
   add_foreign_key "tasks", "providers"
+  add_foreign_key "tasks", "types"
 end
