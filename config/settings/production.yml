@@ -1,5 +1,5 @@
 # host_url: http://zoomerrands.herokuapp.com
-host_url: http://52.8.215.245
+host_url: http://52.8.215.245:3000
 
 facebook:
  key: 531598823665601
