@@ -32,7 +32,7 @@ class Api::V1::TasksController < Api::V1::BaseController
 
   def update
     task = current_agent.tasks.find(params[:id])
-    if task.update(task_params)
+    if task.update(update_task_params)
       render json: task
     else
       render json: {error: task.errors.messages}, status: 403
@@ -46,6 +46,15 @@ class Api::V1::TasksController < Api::V1::BaseController
                   :details, :escrowable)
       elsif provider_signed_in?
         params.require(:task).permit(:usedHour, :usedEscrow, :status)
+      end
+    end
+
+    def update_task_params
+      if client_signed_in?
+        params.permit(:title, :datetime, :address, :contact, :type_id, \
+                  :details, :escrowable)
+      elsif provider_signed_in?
+        params.permit(:usedHour, :usedEscrow, :status)
       end  
     end
 end
