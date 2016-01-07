@@ -1,6 +1,6 @@
 #Base controller which inherited by every api controller
 class Api::V1::TasksController < Api::V1::BaseController  
-  before_action :authenticate_agent! , only: [:index]
+  before_action :authenticate_agent! , exept: [:index]
   before_action :authenticate_client!, only: [:create]
  
   def index
@@ -39,6 +39,17 @@ class Api::V1::TasksController < Api::V1::BaseController
     end
   end
 
+  def upload
+    task = current_agent.tasks.find(params[:id])
+    upload = task.task_uploads.new(task_upload_params)
+
+    if upload.save
+      render json: {thumbUrl: upload.uploadThumbUrl}, status: :created
+    else
+      render json: {errors: upload.errors}, status: 422
+    end
+  end
+
   private
     def task_params
       if client_signed_in?
@@ -52,9 +63,13 @@ class Api::V1::TasksController < Api::V1::BaseController
     def update_task_params
       if client_signed_in?
         params.permit(:title, :datetime, :address, :contact, :type_id, \
-                  :details, :escrowable)
+                  :details, :escrowable, task_uploads_attributes:[:id, :upload])
       elsif provider_signed_in?
         params.permit(:usedHour, :usedEscrow, :status)
       end  
+    end
+
+    def task_upload_params
+      params.permit(:upload)
     end
 end

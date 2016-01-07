@@ -22,6 +22,7 @@ Rails.application.routes.draw do
         put 'types' => 'types#update'
         get 'alltypes' => 'types#alltypes'
         resources :tasks
+        post 'tasks/:id/upload' => 'tasks#upload'
       end
 
       get 'all_types' => 'base#all_job_types'

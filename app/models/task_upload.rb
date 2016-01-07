@@ -6,8 +6,8 @@ class TaskUpload < ActiveRecord::Base
 	
   def attributes
   	a = super
-  	a[:uploadThumbUrl] = nil
-  	a[:uploadUrl] = nil  	
+  	# a[:uploadThumbUrl] = nil
+  	# a[:uploadUrl] = nil  	
   	a
   end
 
