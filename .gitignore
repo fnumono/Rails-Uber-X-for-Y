@@ -17,6 +17,8 @@
 /tmp
 /.idea
 
+/Gemfile.lock
+
 /public/system
 
 public/assets/jquery-ui/
