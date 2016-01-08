@@ -11,7 +11,7 @@ class Task < ActiveRecord::Base
   	a[:client] = nil
   	a[:provider] = nil
   	a[:type] = nil
-    # a[:task_uploads] = nil
+    a[:task_uploads] = nil
   	a
   end
 
