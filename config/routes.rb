@@ -1,4 +1,5 @@
 Rails.application.routes.draw do  
+  apipie
   devise_for :superadmins, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   mount_devise_token_auth_for 'Client', at: 'api/v1/auth'
@@ -24,6 +25,7 @@ Rails.application.routes.draw do
         resources :tasks
         get 'tasks/mytasks' => 'tasks#index_mytasks'
         post 'tasks/:id/upload' => 'tasks#upload'
+        get 'escrowhours' => 'escrow_hours#show'
       end
 
       get 'all_types' => 'base#all_job_types'

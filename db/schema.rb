@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160107030904) do
+ActiveRecord::Schema.define(version: 20160110094541) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,18 @@ ActiveRecord::Schema.define(version: 20160107030904) do
   add_index "clients", ["email"], name: "index_clients_on_email", using: :btree
   add_index "clients", ["reset_password_token"], name: "index_clients_on_reset_password_token", unique: true, using: :btree
   add_index "clients", ["uid", "provider"], name: "index_clients_on_uid_and_provider", unique: true, using: :btree
+
+  create_table "escrow_hours", force: :cascade do |t|
+    t.float    "hoursavail",  default: 0.0
+    t.float    "hoursused",   default: 0.0
+    t.float    "escrowavail", default: 0.0
+    t.float    "escrowused",  default: 0.0
+    t.integer  "client_id"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  add_index "escrow_hours", ["client_id"], name: "index_escrow_hours_on_client_id", using: :btree
 
   create_table "providers", force: :cascade do |t|
     t.string   "provider",                    default: "email", null: false
@@ -203,6 +215,7 @@ ActiveRecord::Schema.define(version: 20160107030904) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "escrow_hours", "clients"
   add_foreign_key "settings", "providers"
   add_foreign_key "settings_types", "settings"
   add_foreign_key "settings_types", "types"
