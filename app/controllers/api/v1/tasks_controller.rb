@@ -57,15 +57,17 @@ class Api::V1::TasksController < Api::V1::BaseController
   end
 
   def destroy
-    if @task.destroy
-      
-    end
-      render json: {title: @task.title}  
+    task = @task.destroy
+    if task
+      render json: {title: task.title}
+    else 
+      render json: {error: @task.errors.messages}, status: 422
+    end      
     
   end
 
   private
-    def find_mytasks
+    def find_mytask!
       @task = current_agent.tasks.find(params[:id])
         if @task.nil?
           render json: {error: 'There is no task you requested'}, status: 403       
