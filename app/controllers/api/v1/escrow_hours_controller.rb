@@ -1,9 +1,7 @@
 class Api::V1::EscrowHoursController < Api::V1::BaseController 
-
 	before_action :authenticate_client!
 
 	api :GET, 'client/escrowhours', 'Get client\'s escrow and hours status'
-	show false
 	error :code => 401, :desc => "Unauthorized"
 	description "Get client\'s escrow status and hours status"
 	example ' "eh": {
