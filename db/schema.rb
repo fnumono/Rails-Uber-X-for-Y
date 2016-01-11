@@ -191,6 +191,8 @@ ActiveRecord::Schema.define(version: 20160110094541) do
     t.string   "title"
     t.datetime "datetime"
     t.string   "address"
+    t.float    "addrlat"
+    t.float    "addrlng"
     t.string   "contact"
     t.text     "details"
     t.boolean  "escrowable"

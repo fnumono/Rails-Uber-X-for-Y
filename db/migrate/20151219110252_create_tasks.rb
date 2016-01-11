@@ -4,6 +4,8 @@ class CreateTasks < ActiveRecord::Migration
       t.string :title
       t.datetime :datetime
       t.string :address
+      t.float :addrlat
+      t.float :addrlng
       t.string :contact
       t.text :details
       t.boolean :escrowable

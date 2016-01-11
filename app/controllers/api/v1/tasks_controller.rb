@@ -77,7 +77,7 @@ class Api::V1::TasksController < Api::V1::BaseController
     def task_params
       if client_signed_in?
         params.require(:task).permit(:title, :datetime, :address, :contact, :type_id, \
-                  :details, :escrowable)
+                  :details, :escrowable, :addrlat, :addrlng)
       elsif provider_signed_in?
         params.require(:task).permit(:usedHour, :usedEscrow, :status)
       end
@@ -85,7 +85,7 @@ class Api::V1::TasksController < Api::V1::BaseController
 
     def update_task_params
       if client_signed_in?
-        params.permit(:title, :datetime, :address, :contact, :type_id, \
+        params.permit(:title, :datetime, :address,  :addrlat, :addrlng, :contact, :type_id, \
                   :details, :escrowable, task_uploads_attributes:[:id, :upload])
       elsif provider_signed_in?
         params.permit(:usedHour, :usedEscrow, :status)
