@@ -5,7 +5,13 @@ class Api::V1::TasksController < Api::V1::BaseController
   before_action :find_mytask!, only: [:destroy]
  
   def index
-    tasks = Task.all
+    params[:offset] = 0 if params[:offset].blank?
+    if params[:limit].blank?
+      tasks = Task.all
+    else
+      tasks = Task.limit(params[:limit]).offset(params[:offset])
+    end  
+    
     render json: tasks
   end
 
