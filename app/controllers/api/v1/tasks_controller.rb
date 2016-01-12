@@ -9,7 +9,7 @@ class Api::V1::TasksController < Api::V1::BaseController
     if params[:limit].blank?
       tasks = Task.all
     else
-      tasks = Task.limit(params[:limit]).offset(params[:offset])
+      tasks = Task.order(status: :desc, created_at: :desc).limit(params[:limit]).offset(params[:offset])
     end  
     
     render json: tasks
@@ -27,6 +27,10 @@ class Api::V1::TasksController < Api::V1::BaseController
 
   def create
     tparams = params[:task]
+    if tparams[:datetime].blank?
+      render json: {alert: 'Date and Time format is not proper.'}, status: 400 and return
+    end
+
     if Task.find_by_title_and_datetime_and_address(tparams[:title],tparams[:datetime],tparams[:address])
       if !params[:force]
         render json: {alert: 'Same task already has been submitted.'}, status: 422 and return
