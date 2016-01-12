@@ -13,7 +13,7 @@ class Api::V1::EscrowHoursController < Api::V1::BaseController
     "client_id": 2,
     "created_at": "2016-01-10T10:46:04.314Z",
     "updated_at": "2016-01-10T10:46:58.417Z"
-  } '	
+    } '	
 	def show
 		render json: {eh: current_client.escrow_hour} 
 	end

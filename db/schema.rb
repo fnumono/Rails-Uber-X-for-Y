@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160110094541) do
+ActiveRecord::Schema.define(version: 20160112023220) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,11 +67,13 @@ ActiveRecord::Schema.define(version: 20160110094541) do
     t.string   "state"
     t.string   "city"
     t.string   "zip"
+    t.integer  "zoom_city_id"
   end
 
   add_index "clients", ["email"], name: "index_clients_on_email", using: :btree
   add_index "clients", ["reset_password_token"], name: "index_clients_on_reset_password_token", unique: true, using: :btree
   add_index "clients", ["uid", "provider"], name: "index_clients_on_uid_and_provider", unique: true, using: :btree
+  add_index "clients", ["zoom_city_id"], name: "index_clients_on_zoom_city_id", using: :btree
 
   create_table "escrow_hours", force: :cascade do |t|
     t.float    "hoursavail",  default: 0.0
@@ -129,11 +131,13 @@ ActiveRecord::Schema.define(version: 20160110094541) do
     t.string   "city"
     t.string   "state"
     t.string   "zip"
+    t.integer  "zoom_city_id"
   end
 
   add_index "providers", ["email"], name: "index_providers_on_email", using: :btree
   add_index "providers", ["reset_password_token"], name: "index_providers_on_reset_password_token", unique: true, using: :btree
   add_index "providers", ["uid", "provider"], name: "index_providers_on_uid_and_provider", unique: true, using: :btree
+  add_index "providers", ["zoom_city_id"], name: "index_providers_on_zoom_city_id", using: :btree
 
   create_table "settings", force: :cascade do |t|
     t.integer  "provider_id"
@@ -202,13 +206,15 @@ ActiveRecord::Schema.define(version: 20160110094541) do
     t.float    "usedHour"
     t.float    "usedEscrow"
     t.string   "status"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "zoom_city_id"
   end
 
   add_index "tasks", ["client_id"], name: "index_tasks_on_client_id", using: :btree
   add_index "tasks", ["provider_id"], name: "index_tasks_on_provider_id", using: :btree
   add_index "tasks", ["type_id"], name: "index_tasks_on_type_id", using: :btree
+  add_index "tasks", ["zoom_city_id"], name: "index_tasks_on_zoom_city_id", using: :btree
 
   create_table "types", force: :cascade do |t|
     t.string   "name"
@@ -217,7 +223,20 @@ ActiveRecord::Schema.define(version: 20160110094541) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "zoom_cities", force: :cascade do |t|
+    t.string   "longName"
+    t.string   "shortName"
+    t.float    "swLat"
+    t.float    "swLng"
+    t.float    "neLat"
+    t.float    "neLng"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "clients", "zoom_cities"
   add_foreign_key "escrow_hours", "clients"
+  add_foreign_key "providers", "zoom_cities"
   add_foreign_key "settings", "providers"
   add_foreign_key "settings_types", "settings"
   add_foreign_key "settings_types", "types"
@@ -225,4 +244,5 @@ ActiveRecord::Schema.define(version: 20160110094541) do
   add_foreign_key "tasks", "clients"
   add_foreign_key "tasks", "providers"
   add_foreign_key "tasks", "types"
+  add_foreign_key "tasks", "zoom_cities"
 end

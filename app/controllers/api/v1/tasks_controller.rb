@@ -26,7 +26,14 @@ class Api::V1::TasksController < Api::V1::BaseController
         render json: {alert: 'Same task already has been submitted.'}, status: 422 and return
       end
     end
+
+    zoomcity = ZoomCity.find_by(longName: tparams[:longCity])
+      if zoomcity.nil?
+        render json: { alert: 'Sorry, We have not zoom office in ' + tparams[:longCity] + '.'}, status: 403 and return
+      end
+
     task = Task.new(task_params)
+    task.zoom_city = zoomcity
     task.client = current_client
     task.status = 'open'
       if task.save

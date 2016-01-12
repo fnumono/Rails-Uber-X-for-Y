@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  longName: MyString
+  shortName: MyString
+  swLat: 1.5
+  swLng: 1.5
+  neLat: 1.5
+  neLng: 1.5
+
+two:
+  longName: MyString
+  shortName: MyString
+  swLat: 1.5
+  swLng: 1.5
+  neLat: 1.5
+  neLng: 1.5
