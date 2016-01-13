@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160112023220) do
+ActiveRecord::Schema.define(version: 20160113042121) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -132,6 +132,8 @@ ActiveRecord::Schema.define(version: 20160112023220) do
     t.string   "state"
     t.string   "zip"
     t.integer  "zoom_city_id"
+    t.float    "addrlat"
+    t.float    "addrlng"
   end
 
   add_index "providers", ["email"], name: "index_providers_on_email", using: :btree

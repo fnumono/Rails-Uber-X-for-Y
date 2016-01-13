@@ -47,6 +47,7 @@ class Api::V1::TasksController < Api::V1::BaseController
     task.client = current_client
     task.status = 'open'
       if task.save
+        send_notification_to_providers task
         render json: task, status: :created
       else
         render json: {errors: task.errors}, status: 401
@@ -111,5 +112,17 @@ class Api::V1::TasksController < Api::V1::BaseController
 
     def task_upload_params
       params.permit(:upload)
+    end
+
+    def send_notification_to_providers(task)      
+      providers = select_nearest_providers(task, 5) 
+      providers.find_each do |provider| 
+        ZoomSmsWorker.perform_async(task.id, provider.id)   
+      end    
+    end
+
+    def select_nearest_providers(task, limit)
+      query = 'abs(addrlat-(' + task.addrlat.to_s + ')) + abs(addrlng-(' + task.addrlng.to_s + ')) AS dist'
+      providers = Provider.select(query,'*').order("dist").limit(limit)
     end
 end
