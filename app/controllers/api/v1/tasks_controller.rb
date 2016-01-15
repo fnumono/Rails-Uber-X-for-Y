@@ -2,7 +2,9 @@
 class Api::V1::TasksController < Api::V1::BaseController  
   before_action :authenticate_agent! , only: [:index_mytasks, :update, :upload]
   before_action :authenticate_client!, only: [:create, :destroy]
-  before_action :find_mytask!, only: [:destroy]
+  before_action :authenticate_provider!, only: [:accept]
+  before_action :find_mytask!, only: [:destroy, :upload, :update]
+  before_action :find_task!, only: [:show, :accept]
  
   def index
     params[:offset] = 0 if params[:offset].blank?
@@ -15,9 +17,8 @@ class Api::V1::TasksController < Api::V1::BaseController
     render json: tasks
   end
 
-  def show
-    task = Task.find(params[:id])
-    render json: task
+  def show    
+    render json: @task
   end
 
   def index_mytasks
@@ -52,20 +53,29 @@ class Api::V1::TasksController < Api::V1::BaseController
       else
         render json: {errors: task.errors}, status: 401
       end
-  end  
+  end
 
-  def update
-    task = current_agent.tasks.find(params[:id])
-    if task.update(update_task_params)
-      render json: task
+  def update    
+    if @task.update(update_task_params)
+      render json: @task
     else
-      render json: {error: task.errors.messages}, status: 403
+      render json: {errors: @task.errors.messages}, status: 403
     end
   end
 
+
+  def destroy
+    task = @task.destroy
+    if task
+      render json: {title: task.title}
+    else 
+      render json: {errors: @task.errors.messages}, status: 422
+    end    
+  end
+
+
   def upload
-    task = current_agent.tasks.find(params[:id])
-    upload = task.task_uploads.new(task_upload_params)
+    upload = @task.task_uploads.new(task_upload_params)
 
     if upload.save
       render json: {thumbUrl: upload.uploadThumbUrl}, status: :created
@@ -74,22 +84,34 @@ class Api::V1::TasksController < Api::V1::BaseController
     end
   end
 
-  def destroy
-    task = @task.destroy
-    if task
-      render json: {title: task.title}
-    else 
-      render json: {error: @task.errors.messages}, status: 422
-    end      
-    
+  def accept    
+    if @task.provider.nil?
+      @task.provider = current_provider
+      if @task.save
+        render json: @task
+      else
+        render json: {errors: 'Sorry, the task is invalid'}, status: 500
+      end
+    else
+      render json: {errors: 'The task was already accepted by other service provider'}, status: 403  
+    end
   end
 
   private
     def find_mytask!
-      @task = current_agent.tasks.find(params[:id])
-        if @task.nil?
-          render json: {error: 'There is no task you requested'}, status: 403       
-        end
+      begin
+        @task = current_agent.tasks.find(params[:id])
+      rescue
+        render json: {errors: 'There is no task you requested'}, status: 404      
+      end
+    end
+
+    def find_task!
+      begin
+        @task = Task.find(params[:id])
+      rescue
+        render json: {errors: 'There is no task you requested'}, status: 404       
+      end
     end
 
     def task_params
