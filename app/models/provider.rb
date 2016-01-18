@@ -2,7 +2,7 @@ class Provider < ActiveRecord::Base
   # Include default devise modules.
   has_one :setting, dependent: :destroy
   has_many :tasks
-  belongs_to :zoom_city
+  belongs_to :zoom_county
   
   devise :database_authenticatable, :registerable,
           :recoverable, :rememberable, :trackable, :validatable,

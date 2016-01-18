@@ -38,13 +38,13 @@ class Api::V1::TasksController < Api::V1::BaseController
       end
     end
 
-    zoomcity = ZoomCity.find_by(longName: tparams[:longCity])
-      if zoomcity.nil?
+    zoomcounty = ZoomCity.find_by(longName: tparams[:longCity])
+      if zoomcounty.nil?
         render json: { alert: 'Sorry, We have not zoom office in ' + tparams[:longCity] + '.'}, status: 403 and return
       end
 
     task = Task.new(task_params)
-    task.zoom_city = zoomcity
+    task.zoom_county = zoomcounty
     task.client = current_client
     task.status = 'open'
       if task.save

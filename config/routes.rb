@@ -1,4 +1,6 @@
-Rails.application.routes.draw do  
+Rails.application.routes.draw do 
+  require 'sidekiq/web'
+  mount Sidekiq::Web, at: '/sidekiq' 
   apipie
   devise_for :superadmins, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)

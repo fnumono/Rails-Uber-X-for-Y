@@ -10,7 +10,13 @@ class Api::V1::SettingController < Api::V1::BaseController
     if params[:agreement]
       agreement = params[:agreement] 
       pfname = params[:fullname].gsub(/\s+/, "").downcase
-      current_provider_fullname = (current_provider.fname + current_provider.lname).gsub(/\s+/, "").downcase
+      current_provider_fullname = (current_provider.fname + current_provider.lname)
+      if current_provider_fullname.blank?
+        render json: { error: 'Please complete your profile before sign on agreement.'}, status: 400 and return
+      else
+        current_provider_fullname = current_provider_fullname.gsub(/\s+/, "").downcase
+      end
+
       current_provider.setting = current_provider.setting || Setting.create!(provider_id: current_provider.id)
       
       if (pfname == current_provider_fullname)

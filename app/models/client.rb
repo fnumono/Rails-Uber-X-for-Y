@@ -1,7 +1,7 @@
 class Client < ActiveRecord::Base
   has_many :tasks
   has_one :escrow_hour
-  belongs_to :zoom_city
+  belongs_to :zoom_county
 
   after_create :new_escrow_hour
 
