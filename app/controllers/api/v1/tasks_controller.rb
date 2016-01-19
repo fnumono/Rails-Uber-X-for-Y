@@ -38,13 +38,13 @@ class Api::V1::TasksController < Api::V1::BaseController
       end
     end
 
-    zoomcounty = ZoomCity.find_by(longName: tparams[:longCity])
-      if zoomcounty.nil?
-        render json: { alert: 'Sorry, We have not zoom office in ' + tparams[:longCity] + '.'}, status: 403 and return
-      end
+    # zoomoffice = ZoomOffice.find_by(id: tparams[:zoomoffice])
+    #   if zoomoffice.nil?
+    #     render json: { alert: 'Select your ZoomOffice exactly.'}, status: 403 and return
+    #   end
 
     task = Task.new(task_params)
-    task.zoom_county = zoomcounty
+    # task.zoom_office = zoomoffice
     task.client = current_client
     task.status = 'open'
       if task.save
@@ -116,8 +116,8 @@ class Api::V1::TasksController < Api::V1::BaseController
 
     def task_params
       if client_signed_in?
-        params.require(:task).permit(:title, :datetime, :address, :contact, :type_id, \
-                  :details, :escrowable, :addrlat, :addrlng)
+        params.require(:task).permit(:title, :datetime, :address, :addrlat, :addrlng, :contact, :type_id, \
+                  :details, :escrowable, :zoom_office_id, task_uploads_attributes:[:id, :upload])
       elsif provider_signed_in?
         params.require(:task).permit(:usedHour, :usedEscrow, :status)
       end
@@ -126,7 +126,7 @@ class Api::V1::TasksController < Api::V1::BaseController
     def update_task_params
       if client_signed_in?
         params.permit(:title, :datetime, :address,  :addrlat, :addrlng, :contact, :type_id, \
-                  :details, :escrowable, task_uploads_attributes:[:id, :upload])
+                  :details, :escrowable, :zoom_office_id, task_uploads_attributes:[:id, :upload])
       elsif provider_signed_in?
         params.permit(:usedHour, :usedEscrow, :status)
       end  

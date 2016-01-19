@@ -1,6 +1,6 @@
-class CreateZoomCounties < ActiveRecord::Migration
+class CreateZoomOffices < ActiveRecord::Migration
   def change
-    create_table :zoom_counties do |t|
+    create_table :zoom_offices do |t|
       t.string :longName
       t.string :shortName
       t.float :swLat

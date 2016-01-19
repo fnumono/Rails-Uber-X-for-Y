@@ -1,9 +1,10 @@
-ActiveAdmin.register ZoomCounty do
+ActiveAdmin.register ZoomOffice do
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :longName, :shortName, :swLat, :swLng, :neLat, :neLng
+permit_params :shortName, :longName
+#
 # or
 #
 # permit_params do

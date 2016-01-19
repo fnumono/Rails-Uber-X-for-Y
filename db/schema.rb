@@ -67,13 +67,13 @@ ActiveRecord::Schema.define(version: 20160113042121) do
     t.string   "state"
     t.string   "city"
     t.string   "zip"
-    t.integer  "zoom_county_id"
+    t.integer  "zoom_office_id"
   end
 
   add_index "clients", ["email"], name: "index_clients_on_email", using: :btree
   add_index "clients", ["reset_password_token"], name: "index_clients_on_reset_password_token", unique: true, using: :btree
   add_index "clients", ["uid", "provider"], name: "index_clients_on_uid_and_provider", unique: true, using: :btree
-  add_index "clients", ["zoom_county_id"], name: "index_clients_on_zoom_county_id", using: :btree
+  add_index "clients", ["zoom_office_id"], name: "index_clients_on_zoom_office_id", using: :btree
 
   create_table "escrow_hours", force: :cascade do |t|
     t.float    "hoursavail",  default: 0.0
@@ -131,7 +131,7 @@ ActiveRecord::Schema.define(version: 20160113042121) do
     t.string   "city"
     t.string   "state"
     t.string   "zip"
-    t.integer  "zoom_county_id"
+    t.integer  "zoom_office_id"
     t.float    "addrlat"
     t.float    "addrlng"
   end
@@ -139,7 +139,7 @@ ActiveRecord::Schema.define(version: 20160113042121) do
   add_index "providers", ["email"], name: "index_providers_on_email", using: :btree
   add_index "providers", ["reset_password_token"], name: "index_providers_on_reset_password_token", unique: true, using: :btree
   add_index "providers", ["uid", "provider"], name: "index_providers_on_uid_and_provider", unique: true, using: :btree
-  add_index "providers", ["zoom_county_id"], name: "index_providers_on_zoom_county_id", using: :btree
+  add_index "providers", ["zoom_office_id"], name: "index_providers_on_zoom_office_id", using: :btree
 
   create_table "settings", force: :cascade do |t|
     t.integer  "provider_id"
@@ -210,13 +210,13 @@ ActiveRecord::Schema.define(version: 20160113042121) do
     t.string   "status"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
-    t.integer  "zoom_county_id"
+    t.integer  "zoom_office_id"
   end
 
   add_index "tasks", ["client_id"], name: "index_tasks_on_client_id", using: :btree
   add_index "tasks", ["provider_id"], name: "index_tasks_on_provider_id", using: :btree
   add_index "tasks", ["type_id"], name: "index_tasks_on_type_id", using: :btree
-  add_index "tasks", ["zoom_county_id"], name: "index_tasks_on_zoom_county_id", using: :btree
+  add_index "tasks", ["zoom_office_id"], name: "index_tasks_on_zoom_office_id", using: :btree
 
   create_table "types", force: :cascade do |t|
     t.string   "name"
@@ -225,7 +225,7 @@ ActiveRecord::Schema.define(version: 20160113042121) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "zoom_counties", force: :cascade do |t|
+  create_table "zoom_offices", force: :cascade do |t|
     t.string   "longName"
     t.string   "shortName"
     t.float    "swLat"
@@ -236,9 +236,9 @@ ActiveRecord::Schema.define(version: 20160113042121) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "clients", "zoom_counties"
+  add_foreign_key "clients", "zoom_offices"
   add_foreign_key "escrow_hours", "clients"
-  add_foreign_key "providers", "zoom_counties"
+  add_foreign_key "providers", "zoom_offices"
   add_foreign_key "settings", "providers"
   add_foreign_key "settings_types", "settings"
   add_foreign_key "settings_types", "types"
@@ -246,5 +246,5 @@ ActiveRecord::Schema.define(version: 20160113042121) do
   add_foreign_key "tasks", "clients"
   add_foreign_key "tasks", "providers"
   add_foreign_key "tasks", "types"
-  add_foreign_key "tasks", "zoom_counties"
+  add_foreign_key "tasks", "zoom_offices"
 end

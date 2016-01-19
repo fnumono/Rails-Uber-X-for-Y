@@ -4,7 +4,7 @@ ActiveAdmin.register Provider do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 permit_params :fname, :lname, :email, :address1, :address2, :phone1, \
-							:phone2, :photo, :city, :state, :zip, :addrlat, :addrlng, :zoom_county_id
+							:phone2, :photo, :city, :state, :zip, :addrlat, :addrlng, :zoom_Office_id
 
 	index do
 		selectable_column
@@ -25,7 +25,7 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, \
 	  column :setting 
 	  column :addrlat
 	  column :addrlng 
-	  column :zoom_county
+	  column :zoom_Office
 	  
 	  actions	
 	end
@@ -45,7 +45,7 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, \
       row :zip
       row :addrlat
       row :addrlng
-      row :zoom_county
+      row :zoom_Office
       row :phone1
 
       # row :phone2      
@@ -75,7 +75,7 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, \
 	  	f.input :zip
 	  	f.input :addrlat
 	  	f.input :addrlng
-	  	f.input :zoom_county
+	  	f.input :zoom_Office
 	  	f.input :phone1
 	  	# f.input :phone2
 	  	# f.input :
