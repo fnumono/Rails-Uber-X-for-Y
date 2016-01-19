@@ -11,7 +11,7 @@ class Provider < ActiveRecord::Base
 
   after_create :create_setting
 
-  has_attached_file :photo, styles: { medium: "160x160!", thumb: "30x30!" } , default_url: "/images/:style/missing.png"
+  has_attached_file :photo, styles: { medium: "190x190!", thumb: "30x30!" } , default_url: "/images/:style/missing.png"
   validates_attachment_content_type :photo, content_type: /\Aimage\/.*\Z/
 
   has_attached_file :driverlicense, styles: { medium: "300x300>", thumb: "300x100!" }, default_url: "/images/:style/missing.png"

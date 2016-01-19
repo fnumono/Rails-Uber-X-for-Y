@@ -23,5 +23,5 @@ client.skip_confirmation!
 client.save!
 
 provider = Provider.new(email: 'provider@zoomerrands.com', password: '12345678', phone1: '+8613714486044')
-client.skip_confirmation!
-client.save!
+provider.skip_confirmation!
+provider.save!

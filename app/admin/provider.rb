@@ -25,7 +25,7 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, \
 	  column :setting 
 	  column :addrlat
 	  column :addrlng 
-	  column :zoom_Office
+	  column :zoom_office
 	  
 	  actions	
 	end
@@ -45,7 +45,7 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, \
       row :zip
       row :addrlat
       row :addrlng
-      row :zoom_Office
+      row :zoom_office
       row :phone1
 
       # row :phone2      
@@ -75,7 +75,7 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, \
 	  	f.input :zip
 	  	f.input :addrlat
 	  	f.input :addrlng
-	  	f.input :zoom_Office
+	  	f.input :zoom_office
 	  	f.input :phone1
 	  	# f.input :phone2
 	  	# f.input :
