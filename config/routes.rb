@@ -25,10 +25,10 @@ Rails.application.routes.draw do
         put 'types' => 'types#update'
         get 'alltypes' => 'types#alltypes'
         get 'zoomoffices' => 'zoom_offices#index'
-        resources :tasks
         get 'tasks/mytasks' => 'tasks#index_mytasks'
         post 'tasks/:id/upload' => 'tasks#upload'
         put 'tasks/:id/accept' => 'tasks#accept'
+        resources :tasks        
         get 'escrowhours' => 'escrow_hours#show'
       end
 

@@ -11,9 +11,8 @@ class Api::V1::TasksController < Api::V1::BaseController
     if params[:limit].blank?
       tasks = Task.all
     else
-      tasks = Task.order(status: :desc, created_at: :desc).limit(params[:limit]).offset(params[:offset])
-    end  
-    
+      tasks = Task.order(status: :desc, datetime: :desc).limit(params[:limit]).offset(params[:offset])
+    end      
     render json: tasks
   end
 
@@ -22,7 +21,12 @@ class Api::V1::TasksController < Api::V1::BaseController
   end
 
   def index_mytasks
-    tasks = current_agent.tasks
+    params[:offset] = 0 if params[:offset].blank?
+    if params[:limit].blank?
+      tasks = current_agent.tasks.order(status: :desc, datetime: :desc)
+    else 
+      tasks = current_agent.tasks.order(status: :desc, datetime: :desc).limit(params[:limit]).offset(params[:offset])
+    end
     render json: tasks
   end
 
@@ -55,7 +59,11 @@ class Api::V1::TasksController < Api::V1::BaseController
       end
   end
 
-  def update    
+  def update
+    if params[:task][:datetime].blank?
+      render json: {alert: 'Date and Time format is not proper.'}, status: 400 and return
+    end
+
     if @task.update(update_task_params)
       render json: @task
     else
@@ -125,10 +133,10 @@ class Api::V1::TasksController < Api::V1::BaseController
 
     def update_task_params
       if client_signed_in?
-        params.permit(:title, :datetime, :address,  :addrlat, :addrlng, :contact, :type_id, \
+        params.require(:task).permit(:title, :datetime, :address,  :addrlat, :addrlng, :contact, :type_id, \
                   :details, :escrowable, :zoom_office_id, task_uploads_attributes:[:id, :upload])
       elsif provider_signed_in?
-        params.permit(:usedHour, :usedEscrow, :status)
+        params.permit(:usedHour, :usedEscrow, :status, task_uploads_attributes:[:id, :upload])
       end  
     end
 
