@@ -17,7 +17,7 @@ class ZoomSmsWorker
                   " Datetime: " + task.datetime.to_s + \
                   " Type: " + task.type.name + \
                   " Location: " + task.address + \
-                  ". Click " + Settings.angular_url + "/pages/job_alert?id=" + task_id.to_s + "  to accept job" 
+                  ". Click " + Settings.angular_url + "/pages/jobalert?id=" + task_id.to_s + "  to accept job" 
         # binding.pry
         twilio.account.messages.create(
           from: Settings.TWILIO_PHONE_NUMBER,
