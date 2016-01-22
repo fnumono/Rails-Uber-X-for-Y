@@ -1,9 +1,9 @@
 #Base controller which inherited by every api controller
 class Api::V1::TasksController < Api::V1::BaseController  
-  before_action :authenticate_agent! , only: [:index_mytasks, :update, :upload]
-  before_action :authenticate_client!, only: [:create, :destroy]
-  before_action :authenticate_provider!, only: [:accept]
-  before_action :find_mytask!, only: [:destroy, :upload, :update]
+  before_action :authenticate_agent! , only: [:index_mytasks,  :upload]
+  before_action :authenticate_client!, only: [:create, :destroy, :update]
+  before_action :authenticate_provider!, only: [:accept, :complete]
+  before_action :find_mytask!, only: [:destroy, :upload, :update, :complete]
   before_action :find_task!, only: [:show, :accept]
  
   def index
@@ -86,7 +86,7 @@ class Api::V1::TasksController < Api::V1::BaseController
     upload = @task.task_uploads.new(task_upload_params)
 
     if upload.save
-      render json: {thumbUrl: upload.uploadThumbUrl}, status: :created
+      render json: {thumbUrl: upload.uploadThumbUrl, uploadUrl: upload.uploadUrl}, status: :created
     else
       render json: {errors: upload.errors}, status: 422
     end
@@ -103,6 +103,35 @@ class Api::V1::TasksController < Api::V1::BaseController
     else
       render json: {errors: 'The task was already accepted by other service provider'}, status: 403  
     end
+  end
+
+  def complete
+    if params[:status].nil?
+      params[:status] = 'close'
+    end
+
+    usedHour = params[:usedHour].blank? ? 0 : params[:usedHour].to_f.abs
+    usedEscrow = params[:usedEscrow].blank? ? 0 : params[:usedEscrow].to_f.abs
+    @task.client.escrow_hour.hoursavail -= usedHour
+    @task.client.escrow_hour.hoursused += usedHour
+    @task.client.escrow_hour.escrowavail -= usedEscrow
+    @task.client.escrow_hour.escrowused += usedEscrow   
+
+    begin
+      ActiveRecord::Base.transaction do      
+        @task.client.escrow_hour.save!
+        @task.update!(complete_task_params)
+      end
+      render json: @task
+    rescue
+      render json: {errors: "The task can't be completed."}, status: 403
+    end
+
+    # if @task.update(complete_task_params)  
+    #   render json: @task
+    # else
+    #   render json: {errors: @task.errors.messages}, status: 403
+    # end
   end
 
   private
@@ -122,22 +151,18 @@ class Api::V1::TasksController < Api::V1::BaseController
       end
     end
 
-    def task_params
-      if client_signed_in?
+    def task_params      
         params.require(:task).permit(:title, :datetime, :address, :addrlat, :addrlng, :contact, :type_id, \
-                  :details, :escrowable, :zoom_office_id, task_uploads_attributes:[:id, :upload])
-      elsif provider_signed_in?
-        params.require(:task).permit(:usedHour, :usedEscrow, :status)
-      end
+                  :details, :escrowable, :zoom_office_id, task_uploads_attributes:[:id, :upload])      
     end
 
-    def update_task_params
-      if client_signed_in?
+    def update_task_params      
         params.require(:task).permit(:title, :datetime, :address,  :addrlat, :addrlng, :contact, :type_id, \
-                  :details, :escrowable, :zoom_office_id, task_uploads_attributes:[:id, :upload])
-      elsif provider_signed_in?
-        params.permit(:usedHour, :usedEscrow, :status, task_uploads_attributes:[:id, :upload])
-      end  
+                  :details, :escrowable, :zoom_office_id, task_uploads_attributes:[:id, :upload])      
+    end
+
+    def complete_task_params
+      params.permit(:usedHour, :usedEscrow, :status, task_uploads_attributes:[:id, :upload])
     end
 
     def task_upload_params

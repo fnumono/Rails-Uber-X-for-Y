@@ -28,6 +28,7 @@ Rails.application.routes.draw do
         get 'tasks/mytasks' => 'tasks#index_mytasks'
         post 'tasks/:id/upload' => 'tasks#upload'
         put 'tasks/:id/accept' => 'tasks#accept'
+        put 'tasks/:id/complete' => 'tasks#complete'
         resources :tasks        
         get 'escrowhours' => 'escrow_hours#show'
       end

@@ -12,9 +12,9 @@ class CreateTasks < ActiveRecord::Migration
       t.references :client, index: true, foreign_key: true
       t.references :provider, index: true, foreign_key: true
       t.references :type, index: true, foreign_key: true
-      t.float :usedHour
-      t.float :usedEscrow
-      t.string :status
+      t.float :usedHour, default: 0
+      t.float :usedEscrow, default: 0
+      t.string :status, default: 'open'
 
       t.timestamps null: false
     end
