@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   require 'sidekiq/web'
   mount Sidekiq::Web, at: '/sidekiq' 
   apipie
-  devise_for :superadmins, ActiveAdmin::Devise.config
+  devise_for :admins, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   mount_devise_token_auth_for 'Client', at: 'api/v1/auth'
   mount_devise_token_auth_for 'Provider', at: 'api/v1/provider_auth'

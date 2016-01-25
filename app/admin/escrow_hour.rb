@@ -4,6 +4,7 @@ ActiveAdmin.register EscrowHour do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 permit_params :hoursavail, :hoursused, :escrowavail, :escrowused
+menu false
 # or
 #
 # permit_params do

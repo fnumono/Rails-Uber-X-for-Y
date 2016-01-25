@@ -17,6 +17,10 @@ Type.create!(name: 'Grocery', comment: 'Go grocery for client')
 Type.create!(name: 'Pets', comment: 'Care pets')
 
 ZoomOffice.create!(longName: 'Los Angeles', shortName: 'Los Angeles')
+ZoomOffice.create!(longName: 'San Diego', shortName: 'San Diego')
+ZoomOffice.create!(longName: 'New York', shortName: 'NY')
+ZoomOffice.create!(longName: 'San Francisco', shortName: 'San Francisco')
+
 
 client = Client.new(email: 'client@zoomerrands.com', password: '12345678')
 client.skip_confirmation!

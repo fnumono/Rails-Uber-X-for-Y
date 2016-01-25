@@ -3,6 +3,8 @@ class Client < ActiveRecord::Base
   has_one :escrow_hour
   belongs_to :zoom_office
 
+  accepts_nested_attributes_for :escrow_hour, allow_destroy: true
+
   after_create :new_escrow_hour
 
   # Include default devise modules.

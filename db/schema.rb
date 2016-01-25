@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160113042121) do
+ActiveRecord::Schema.define(version: 20160123111615) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,26 @@ ActiveRecord::Schema.define(version: 20160113042121) do
   add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id", using: :btree
   add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
+
+  create_table "admins", force: :cascade do |t|
+    t.string   "email",                  default: "", null: false
+    t.string   "encrypted_password",     default: "", null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          default: 0,  null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.inet     "current_sign_in_ip"
+    t.inet     "last_sign_in_ip"
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.integer  "zoom_office_id"
+  end
+
+  add_index "admins", ["email"], name: "index_admins_on_email", unique: true, using: :btree
+  add_index "admins", ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true, using: :btree
+  add_index "admins", ["zoom_office_id"], name: "index_admins_on_zoom_office_id", using: :btree
 
   create_table "clients", force: :cascade do |t|
     t.string   "provider",               default: "email", null: false
@@ -134,6 +154,7 @@ ActiveRecord::Schema.define(version: 20160113042121) do
     t.integer  "zoom_office_id"
     t.float    "addrlat"
     t.float    "addrlng"
+    t.boolean  "active",                      default: false
   end
 
   add_index "providers", ["email"], name: "index_providers_on_email", using: :btree
@@ -162,24 +183,6 @@ ActiveRecord::Schema.define(version: 20160113042121) do
 
   add_index "settings_types", ["setting_id"], name: "index_settings_types_on_setting_id", using: :btree
   add_index "settings_types", ["type_id"], name: "index_settings_types_on_type_id", using: :btree
-
-  create_table "superadmins", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
-    t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.inet     "current_sign_in_ip"
-    t.inet     "last_sign_in_ip"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-  end
-
-  add_index "superadmins", ["email"], name: "index_superadmins_on_email", unique: true, using: :btree
-  add_index "superadmins", ["reset_password_token"], name: "index_superadmins_on_reset_password_token", unique: true, using: :btree
 
   create_table "task_uploads", force: :cascade do |t|
     t.integer  "task_id"
@@ -236,6 +239,7 @@ ActiveRecord::Schema.define(version: 20160113042121) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "admins", "zoom_offices"
   add_foreign_key "clients", "zoom_offices"
   add_foreign_key "escrow_hours", "clients"
   add_foreign_key "providers", "zoom_offices"

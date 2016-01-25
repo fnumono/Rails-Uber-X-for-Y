@@ -110,28 +110,22 @@ class Api::V1::TasksController < Api::V1::BaseController
       params[:status] = 'close'
     end
 
-    usedHour = params[:usedHour].blank? ? 0 : params[:usedHour].to_f.abs
-    usedEscrow = params[:usedEscrow].blank? ? 0 : params[:usedEscrow].to_f.abs
-    @task.client.escrow_hour.hoursavail -= usedHour
-    @task.client.escrow_hour.hoursused += usedHour
-    @task.client.escrow_hour.escrowavail -= usedEscrow
-    @task.client.escrow_hour.escrowused += usedEscrow   
+    params[:usedHour] = params[:usedHour].blank? ? 0 : params[:usedHour].to_f.abs
+    params[:usedEscrow] = params[:usedEscrow].blank? ? 0 : params[:usedEscrow].to_f.abs
+    # @task.client.escrow_hour.hoursavail -= usedHour
+    # @task.client.escrow_hour.hoursused += usedHour
+    # @task.client.escrow_hour.escrowavail -= usedEscrow
+    # @task.client.escrow_hour.escrowused += usedEscrow   
 
     begin
       ActiveRecord::Base.transaction do      
-        @task.client.escrow_hour.save!
+        # @task.client.escrow_hour.save!
         @task.update!(complete_task_params)
       end
       render json: @task
     rescue
       render json: {errors: "The task can't be completed."}, status: 403
     end
-
-    # if @task.update(complete_task_params)  
-    #   render json: @task
-    # else
-    #   render json: {errors: @task.errors.messages}, status: 403
-    # end
   end
 
   private

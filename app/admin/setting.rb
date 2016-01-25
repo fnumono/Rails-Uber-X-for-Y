@@ -5,6 +5,7 @@ ActiveAdmin.register Setting do
 #
 permit_params :provider_id, :a1099, :noncompete, :confidentiality, :delivery, :sms, :email, type_ids: []
 #
+menu false
 
 index do
   selectable_column
