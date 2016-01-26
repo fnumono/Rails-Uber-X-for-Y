@@ -48,6 +48,9 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 	  column :delivery do |provider|
 	  	provider.setting.delivery
 	  end
+	  column :types do |provider|
+		  	provider.setting.types.map { |type| type.name  }
+		  end 
 	  column :active
 
 	  actions	
@@ -104,9 +107,12 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 		  row :delivery do |provider|
 		  	provider.setting.delivery
 		  end
+		  row :types do |provider|
+		  	provider.setting.types.map { |type| type.name  }
+		  end 
 		  row :created_at
 		  row :updated_at
-		  row :active      
+		  row :active 
     end
 
     panel "Provider Task History" do

@@ -79,6 +79,7 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
 			row :status
 			row :created_at
 			row :updated_at 
+
     end
 
     panel "Receipts" do
@@ -114,7 +115,7 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
 			f.input :escrowable 
 			f.input :usedHour
 			f.input :usedEscrow			
-			f.input :status
+			f.input :status, as: :select, collection: ['open', 'close'] , :prompt => 'Select one'
 
 			f.inputs do
 				f.has_many :task_uploads, heading: 'Receipts', allow_destroy: true  do |a|

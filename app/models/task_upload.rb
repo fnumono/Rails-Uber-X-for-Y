@@ -3,7 +3,7 @@ class TaskUpload < ActiveRecord::Base
 
 	has_attached_file :upload, :styles => lambda{ |a|
                                   ["image/jpeg", "image/png", "image/jpg", "image/gif"].include?( a.content_type ) ? {
-                                  :thumb=> "26x44!",                                  
+                                  :thumb=> "26x40!",                                  
                                   :medium => "100x100>"}: {}
                                  }   , 
                             default_url: "/images/:style/missing.png"

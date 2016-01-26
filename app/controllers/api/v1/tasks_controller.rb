@@ -51,8 +51,7 @@ class Api::V1::TasksController < Api::V1::BaseController
     # task.zoom_office = zoomoffice
     task.client = current_client
     task.status = 'open'
-      if task.save
-        send_notification_to_providers task
+      if task.save        
         render json: task, status: :created
       else
         render json: {errors: task.errors}, status: 401
@@ -94,13 +93,19 @@ class Api::V1::TasksController < Api::V1::BaseController
 
   def accept    
     if @task.provider.nil?
+      if !(current_provider.setting.types.exist?(@task.type_id))
+        render json: {errors: 'You can\'t accept ' + @task.type.name + ' tasks.' }, status: 403 and return
+      end
+
       @task.provider = current_provider
       if @task.save
         render json: @task
       else
         render json: {errors: 'Sorry, the task is invalid'}, status: 500
       end
-    else
+    elsif @task.provider == current_provider
+      render json: {errors: 'You are already awarded to this task. Please check "my jobs" page'}, status: 400
+    else  
       render json: {errors: 'The task was already accepted by other service provider'}, status: 403  
     end
   end
@@ -121,6 +126,7 @@ class Api::V1::TasksController < Api::V1::BaseController
       ActiveRecord::Base.transaction do      
         # @task.client.escrow_hour.save!
         @task.update!(complete_task_params)
+        raise ActiveRecord::RecordInvalid
       end
       render json: @task
     rescue
@@ -163,15 +169,5 @@ class Api::V1::TasksController < Api::V1::BaseController
       params.permit(:upload)
     end
 
-    def send_notification_to_providers(task)      
-      providers = select_nearest_providers(task, 5) 
-      providers.find_each do |provider| 
-        ZoomSmsWorker.perform_async(task.id, provider.id)   
-      end    
-    end
-
-    def select_nearest_providers(task, limit)
-      query = 'abs(addrlat-(' + task.addrlat.to_s + ')) + abs(addrlng-(' + task.addrlng.to_s + ')) AS dist'
-      providers = Provider.select(query,'*').order("dist").limit(limit)
-    end
+        
 end

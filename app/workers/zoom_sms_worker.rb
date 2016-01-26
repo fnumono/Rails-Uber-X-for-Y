@@ -2,7 +2,7 @@ class ZoomSmsWorker
   include Sidekiq::Worker
   sidekiq_options :retry => false
 
-  def perform(task_id, provider_id)
+  def perform(task_id, provider_id, content_type)
     twilio = Twilio::REST::Client.new
     task = Task.find(task_id)
     provider = Provider.find(provider_id)
@@ -13,12 +13,23 @@ class ZoomSmsWorker
         else
           receiver_number = Settings.TWILIO_PHONE_PREFIX+provider.phone1
         end
-        content = "Job Notification " + task.title + \
-                  " Datetime: " + task.datetime.to_s + \
-                  " Type: " + task.type.name + \
-                  " Location: " + task.address + \
-                  ". Click " + Settings.angular_url + "/pages/jobalert?id=" + task_id.to_s + "  to accept job" 
-        # binding.pry
+
+        if content_type == 'created'
+          content = "Job Notification " + task.title + \
+                    " Datetime: " + task.datetime.to_s + \
+                    " Type: " + task.type.name + \
+                    " Location: " + task.address + \
+                    ". Click " + Settings.angular_url + "/pages/jobalert?id=" + \
+                     task_id.to_s + "  to accept job" 
+        elsif content_type == 'updated'
+          content = "Job Updated " + task.title + \
+                    " Datetime: " + task.datetime.to_s + \
+                    " Type: " + task.type.name + \
+                    " Location: " + task.address + \
+                    ". Click " + Settings.angular_url + "/pages/jobalert?id="  + \
+                     task_id.to_s + "  to check the updated job" 
+        end              
+          # binding.pry
         twilio.account.messages.create(
           from: Settings.TWILIO_PHONE_NUMBER,
           to: receiver_number,
