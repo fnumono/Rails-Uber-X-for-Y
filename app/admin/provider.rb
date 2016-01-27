@@ -6,7 +6,17 @@ ActiveAdmin.register Provider do
 permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :driverlicense, \
 		:proofinsurance,	:phone2, :photo, :city, :state, :zip, :addrlat, :addrlng, :zoom_Office_id
 
-
+	controller do
+    def scoped_collection    	
+    	if current_admin.email == 'superadmin@zoomerrands.com'
+    		end_of_association_chain
+    	else
+    		office = current_admin.zoom_office
+      	end_of_association_chain.where(zoom_office: office)
+      end
+    end
+  end	
+	
 	index do
 		selectable_column
 	  column :id 

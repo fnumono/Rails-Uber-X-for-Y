@@ -14,6 +14,17 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
 #   permitted
 # end
 
+	controller do
+    def scoped_collection    	
+    	if current_admin.email == 'superadmin@zoomerrands.com'
+    		end_of_association_chain
+    	else
+    		office = current_admin.zoom_office
+      	end_of_association_chain.where(zoom_office: office)
+      end
+    end
+  end
+
 	index do
 		selectable_column
 		column :id

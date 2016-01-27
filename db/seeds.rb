@@ -5,7 +5,6 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-Superadmin.create!(email: 'superadmin@zoomerrands.com', password: 'password', password_confirmation: 'password')
 
 Type.create!(name: 'Dog walker', comment: 'Walk dog for an hour')
 Type.create!(name: 'Cleaner', comment: 'clean house')
@@ -16,16 +15,21 @@ Type.create!(name: 'Errands', comment: 'Some errands')
 Type.create!(name: 'Grocery', comment: 'Go grocery for client')
 Type.create!(name: 'Pets', comment: 'Care pets')
 
-ZoomOffice.create!(longName: 'Los Angeles', shortName: 'Los Angeles')
-ZoomOffice.create!(longName: 'San Diego', shortName: 'San Diego')
-ZoomOffice.create!(longName: 'New York', shortName: 'NY')
-ZoomOffice.create!(longName: 'San Francisco', shortName: 'San Francisco')
+la = ZoomOffice.create!(longName: 'Los Angeles', shortName: 'Los Angeles')
+sd = ZoomOffice.create!(longName: 'San Diego', shortName: 'San Diego')
+ny = ZoomOffice.create!(longName: 'New York', shortName: 'NY')
+sf = ZoomOffice.create!(longName: 'San Francisco', shortName: 'San Francisco')
+
+Admin.create!(email: 'superadmin@zoomerrands.com', password: '12345678', password_confirmation: '12345678')
+Admin.create!(email: 'la.admin@zoomerrands.com', password: '12345678', password_confirmation: '12345678', zoom_office: la)
+Admin.create!(email: 'sd.admin@zoomerrands.com', password: '12345678', password_confirmation: '12345678', zoom_office: sd)
+Admin.create!(email: 'ny.admin@zoomerrands.com', password: '12345678', password_confirmation: '12345678', zoom_office: ny)
 
 
-client = Client.new(email: 'client@zoomerrands.com', password: '12345678')
+client = Client.new(email: 'client@zoomerrands.com', password: '12345678', zoom_office: la)
 client.skip_confirmation!
 client.save!
 
-provider = Provider.new(email: 'provider@zoomerrands.com', password: '12345678', phone1: '+8613714486044')
+provider = Provider.new(email: 'provider@zoomerrands.com', password: '12345678', phone1: '+8613714486044', zoom_office: la)
 provider.skip_confirmation!
 provider.save!

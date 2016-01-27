@@ -13,5 +13,8 @@ permit_params :shortName, :longName
 #   permitted
 # end
 
+  menu :if => proc{ current_admin.email == 'superadmin@zoomerrands.com' }
+
+
 
 end
