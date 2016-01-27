@@ -3,10 +3,15 @@ class ZoomMailWorker
 	sidekiq_options :retry => false
 	
 	def perform(task_id, user_id, type)
-		#sending mail
-		group = Group.find_by(id: group_id)
-		Array(group.users).each do |user|
-			SecualEventMailer.secual_event(user.id, secual_event_id).deliver
+		if type == 'closed'		
+			ZoomNotificationMailer.close_to_provider(task_id).deliver
+			ZoomNotificationMailer.close_to_client(task_id).deliver
+		elsif type == 'created'
+			ZoomNotificationMailer.job_alert_to_provider(task_id, user_id).deliver	
+		elsif type == 'updated'
+			ZoomNotificationMailer.job_updated_to_provider(task_id, user_id).deliver
+		elsif type == 'awarded'
+			ZoomNotificationMailer.job_awarded_to_provider(task_id, user_id).deliver	
 		end
 	end
 end

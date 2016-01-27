@@ -64,6 +64,14 @@ class Api::V1::TasksController < Api::V1::BaseController
     end
 
     if @task.update(update_task_params)
+      if (@task.status == 'open') && (!@task.provider.nil?)
+        if @task.provider.setting.sms
+          ZoomSmsWorker.perform_in(2.seconds, @task.id, @task.provider_id, 'updated')
+        end
+        if @task.provider.setting.email
+          ZoomMailWorker.perform_in(2.seconds, @task.id, @task.provider_id, 'updated')
+        end  
+      end  
       render json: @task
     else
       render json: {errors: @task.errors.messages}, status: 403
@@ -93,12 +101,18 @@ class Api::V1::TasksController < Api::V1::BaseController
 
   def accept    
     if @task.provider.nil?
-      if !(current_provider.setting.types.exist?(@task.type_id))
+      if !(current_provider.setting.types.exists?(@task.type_id))
         render json: {errors: 'You can\'t accept ' + @task.type.name + ' tasks.' }, status: 403 and return
       end
 
       @task.provider = current_provider
       if @task.save
+        if current_provider.setting.sms
+          ZoomSmsWorker.perform_in(2.seconds, @task.id, current_provider.id, 'awarded')
+        end
+        if current_provider.setting.email
+          ZoomMailWorker.perform_in(2.seconds, @task.id, current_provider.id, 'awarded')
+        end 
         render json: @task
       else
         render json: {errors: 'Sorry, the task is invalid'}, status: 500
@@ -117,17 +131,10 @@ class Api::V1::TasksController < Api::V1::BaseController
 
     params[:usedHour] = params[:usedHour].blank? ? 0 : params[:usedHour].to_f.abs
     params[:usedEscrow] = params[:usedEscrow].blank? ? 0 : params[:usedEscrow].to_f.abs
-    # @task.client.escrow_hour.hoursavail -= usedHour
-    # @task.client.escrow_hour.hoursused += usedHour
-    # @task.client.escrow_hour.escrowavail -= usedEscrow
-    # @task.client.escrow_hour.escrowused += usedEscrow   
-
-    begin
-      ActiveRecord::Base.transaction do      
-        # @task.client.escrow_hour.save!
-        @task.update!(complete_task_params)
-        raise ActiveRecord::RecordInvalid
-      end
+    
+    begin      
+      @task.update!(complete_task_params)
+      # ZoomMailWorker.perform_in(2.seconds, @task.id, 0, 'closed')
       render json: @task
     rescue
       render json: {errors: "The task can't be completed."}, status: 403

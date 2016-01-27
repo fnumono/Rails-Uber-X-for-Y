@@ -9,7 +9,7 @@ class Task < ActiveRecord::Base
 
   after_create :send_job_alert_sms
   before_update :update_client_escrow_hour
-  after_update :send_update_notification_provider_client
+  after_update :send_complete_notification_provider_client
 
 
   def attributes
@@ -22,19 +22,21 @@ class Task < ActiveRecord::Base
   end
 
   protected
-    def send_update_notification_provider_client
-      if (self.status == 'open') && (!self.provider.nil?)
-        ZoomSmsWorker.perform_async(self.id, self.provider_id, 'updated')
-      elsif (self.status == 'close')
-        # ZoomMailWorker.perform_async(self.id, self.client_id, 'closed-client')
-        # ZoomMailWorker.perform_async(self.id, self.provider_id, 'closed-provider')
+    def send_complete_notification_provider_client
+      if (self.status == 'close')
+        ZoomMailWorker.perform_in(2.seconds, self.id, 0, 'closed')
       end 
     end
 
-    def send_job_alert_sms
+    def send_job_alert_sms      
       providers = select_nearest_sametype_providers(5) 
       providers.find_each do |provider| 
-        ZoomSmsWorker.perform_async(self.id, provider.id, 'created')   
+        if provider.setting.sms
+          ZoomSmsWorker.perform_in(2.seconds, self.id, provider.id, 'created') 
+        end   
+        if provider.setting.email
+          ZoomMailWorker.perform_in(2.seconds, self.id, provider.id, 'created') 
+        end
       end 
     end
 

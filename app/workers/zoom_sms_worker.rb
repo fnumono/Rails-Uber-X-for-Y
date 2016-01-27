@@ -15,19 +15,26 @@ class ZoomSmsWorker
         end
 
         if content_type == 'created'
-          content = "Job Notification " + task.title + \
-                    " Datetime: " + task.datetime.to_s + \
-                    " Type: " + task.type.name + \
-                    " Location: " + task.address + \
+          content = "Job Notification \"" + task.title + \
+                    "\", Datetime: " + task.datetime.to_s + \
+                    ", Type: " + task.type.name + \
+                    ", Location: " + task.address + \
                     ". Click " + Settings.angular_url + "/pages/jobalert?id=" + \
                      task_id.to_s + "  to accept job" 
         elsif content_type == 'updated'
-          content = "Job Updated " + task.title + \
-                    " Datetime: " + task.datetime.to_s + \
-                    " Type: " + task.type.name + \
-                    " Location: " + task.address + \
-                    ". Click " + Settings.angular_url + "/pages/jobalert?id="  + \
+          content = "Job changed \"" + task.title + \
+                    "\", Datetime: " + task.datetime.to_s + \
+                    ", Type: " + task.type.name + \
+                    ", Location: " + task.address + \
+                    ". Click " + Settings.angular_url + "/provider/edit_job?id="  + \
                      task_id.to_s + "  to check the updated job" 
+        elsif content_type == 'awarded'
+          content = "Congratulations!  Job awarded \"" + task.title + \
+                    "\", Datetime: " + task.datetime.to_s + \
+                    ", Type: " + task.type.name + \
+                    ", Location: " + task.address + \
+                    ". Click " + Settings.angular_url + "/provider/edit_job?id="  + \
+                     task_id.to_s + "  to check the updated job"              
         end              
           # binding.pry
         twilio.account.messages.create(

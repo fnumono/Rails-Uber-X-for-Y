@@ -1,0 +1,16 @@
+<h1>New Job Alert!</h1>
+
+<p>Dear <%= @provider.fname %> <%= @provider.lname %>, new task was posted.<br/></p>
+<p>Title:  <%= @task.title %><br/></p>
+<p>Datetime: <%= @task.datetime %><br/> </p>
+<p>Service Category: <%= @task.type.name %> <br/> </p>
+<p>Location: <%= @task.address %><br/> </p>
+<p>Require purchase: <%= @task.escrowable %><br/> </p>
+<p>Job Notes: <%= @task.details %><br/> </p>
+-----------------------------------
+<p>Client Name: <%= @client.fname %> <%= @client.lname %><br/> </p>
+<!-- <p>Client Phone: <%= @client.phone1 %><br/> </p>
+<p>Client Email: <%= @client.email %><br/> </p> -->
+<a href=<%= @taskurl %>>Click here to accept job.</a> 
+
+

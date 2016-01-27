@@ -1,0 +1,9 @@
+Errand Completed!!!
+
+Dear <%= @client.fname %> <%= @client.lname %>, 
+Your Errand "<%= @task.title %>" has been completed. 
+Hours Used: <%= @task.usedHour %>hrs  
+Escrow Used: $<%= @task.usedEscrow %>
+------------------------------
+Your current available hours: <%= @client.escrow_hour.hoursavail %>hrs  
+Your current escrow balance: $<%= @client.escrow_hour.escrowavail %>  

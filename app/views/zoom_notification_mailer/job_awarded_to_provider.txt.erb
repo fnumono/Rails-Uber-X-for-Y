@@ -1,0 +1,12 @@
+Congratulations! Job Awarded
+
+Dear <%= @provider.fname %> <%= @provider.lname %>, You are awarded this job.
+Title:  <%= @task.title %>
+Datetime: <%= @task.datetime %> 
+Service Category: <%= @task.type.name %>  
+Location: <%= @task.address %> 
+Require purchase: <%= @task.escrowable %> 
+Job Notes: <%= @task.details %> 
+-----------------------------------
+Client Name: <%= @client.fname %> <%= @client.lname %> 
+Click <%= @taskurl %> to check the awarded job.

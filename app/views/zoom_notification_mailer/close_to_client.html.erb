@@ -1,0 +1,9 @@
+<h1>Errand Completed!!!</h1>
+
+<p>Dear <%= @client.fname %> <%= @client.lname %>, <br/></p>
+<p>Your Errand "<%= @task.title %>" has been completed. <br/></p>
+<p>Hours Used: <%= @task.usedHour %>hrs <br/> </p>
+<p>Escrow Used: $<%= @task.usedEscrow %> <br/> </p>
+<p>------------------------------</p>
+<p>Your current available hours: <%= @client.escrow_hour.hoursavail %>hrs <br/> </p>
+<p>Your current escrow balance: $<%= @client.escrow_hour.escrowavail %> <br/> </p>
