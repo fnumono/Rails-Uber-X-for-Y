@@ -10,7 +10,9 @@ ActiveAdmin.register Admin do
     column :current_sign_in_at
     column :sign_in_count
     column :created_at
-    column :zoom_office
+    column :zoom_office do |admin|
+      admin.zoom_office.longName if !admin.zoom_office.nil?
+    end
     actions
   end
 
@@ -25,7 +27,8 @@ ActiveAdmin.register Admin do
       f.input :email
       f.input :password
       f.input :password_confirmation
-      f.input :zoom_office
+      f.input :zoom_office, as: :select, multiple: false, \
+              :collection => ZoomOffice.all.map{ |office| [office.longName, office.id] }, :prompt => 'Select one'     
     end
     f.actions
   end

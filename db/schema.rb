@@ -208,11 +208,11 @@ ActiveRecord::Schema.define(version: 20160123111615) do
     t.integer  "client_id"
     t.integer  "provider_id"
     t.integer  "type_id"
-    t.float    "usedHour"
-    t.float    "usedEscrow"
-    t.string   "status"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.float    "usedHour",       default: 0.0
+    t.float    "usedEscrow",     default: 0.0
+    t.string   "status",         default: "open"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.integer  "zoom_office_id"
   end
 
