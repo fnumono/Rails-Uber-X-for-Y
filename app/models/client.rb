@@ -1,11 +1,12 @@
 class Client < ActiveRecord::Base
   has_many :tasks
-  has_one :escrow_hour
+  has_one :escrow_hour, dependent: :destroy
   belongs_to :zoom_office
 
   accepts_nested_attributes_for :escrow_hour, allow_destroy: true
 
   after_create :new_escrow_hour
+  before_destroy :release_task
 
   # Include default devise modules.
   devise :database_authenticatable, :registerable,
@@ -33,5 +34,10 @@ class Client < ActiveRecord::Base
 
   def photoThumbUrl  
     Settings.host_url + photo.url(:thumb) if !photo.url.nil?
-  end  
+  end 
+
+  private
+    def release_task
+      self.tasks = []
+    end 
 end

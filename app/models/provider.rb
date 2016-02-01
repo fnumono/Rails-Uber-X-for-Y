@@ -10,6 +10,7 @@ class Provider < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   after_create :create_setting
+  before_destroy :release_task
 
   has_attached_file :photo, styles: { medium: "190x190!", thumb: "30x30!" } , default_url: "/images/:style/missing.png"
   validates_attachment_content_type :photo, content_type: /\Aimage\/.*\Z/
@@ -47,9 +48,13 @@ class Provider < ActiveRecord::Base
 
   private
 
-  def create_setting
-    Setting.create!(provider_id: id)
-  end
+    def create_setting
+      Setting.create!(provider_id: id)
+    end
+
+    def release_task
+      self.tasks = []
+    end
 
 
 end
