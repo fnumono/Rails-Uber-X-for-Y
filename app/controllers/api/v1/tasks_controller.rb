@@ -1,6 +1,6 @@
 #Base controller which inherited by every api controller
 class Api::V1::TasksController < Api::V1::BaseController  
-  before_action :authenticate_agent! , only: [:index_mytasks,  :upload]
+  before_action :authenticate_agent! , only: [:index_mytasks, :index_mytasks_calendar, :upload]
   before_action :authenticate_client!, only: [:create, :destroy, :update]
   before_action :authenticate_provider!, only: [:accept, :complete]
   before_action :find_mytask!, only: [:destroy, :upload, :update, :complete]
@@ -27,6 +27,18 @@ class Api::V1::TasksController < Api::V1::BaseController
     else 
       tasks = current_agent.tasks.order(status: :desc, datetime: :desc).limit(params[:limit]).offset(params[:offset])
     end
+    render json: tasks
+  end
+
+  
+  api :GET, 'client/tasks/mytaskscalendar', 'Get client\'s tasks for calendar'
+  error :code => 401, :desc => "Unauthorized"
+  description "Get client\'s tasks for calendar"
+  example "Restangular.one('client/tasks/mytaskscalendar').get()"
+  def index_mytasks_calendar
+    query = 'datetime::timestamp::date AS date'
+    tasks = current_agent.tasks.select(query,'*').order(status: :desc, datetime: :desc).group_by(&:date)
+    
     render json: tasks
   end
 
