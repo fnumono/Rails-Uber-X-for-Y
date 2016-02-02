@@ -38,8 +38,14 @@ class Api::V1::TasksController < Api::V1::BaseController
   def index_mytasks_calendar
     query = 'datetime::timestamp::date AS date'
     tasks = current_agent.tasks.select(query,'*').order(status: :desc, datetime: :desc).group_by(&:date)
+    resp = []
+    tasks.keys.each do |key|
+      oneday_task = {}
+      oneday_task[key] = tasks[key]
+      resp << oneday_task
+    end
     
-    render json: tasks
+    render json: {events: resp}
   end
 
   def create
