@@ -37,7 +37,7 @@ class Api::V1::TasksController < Api::V1::BaseController
   example "Restangular.one('client/tasks/mytaskscalendar').get()"
   def index_mytasks_calendar
     query = 'datetime::timestamp::date AS date'
-    tasks = current_agent.tasks.select(query,'*').order(status: :desc, datetime: :desc).group_by(&:date)
+    tasks = current_agent.tasks.select(query,'*').where(status: 'open').order(datetime: :desc).group_by(&:date)
     # resp = []
     # tasks.keys.each do |key|
     #   oneday_task = {}

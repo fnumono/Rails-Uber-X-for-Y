@@ -30,6 +30,7 @@ client = Client.new(email: 'client@zoomerrands.com', password: '12345678', zoom_
 client.skip_confirmation!
 client.save!
 
-provider = Provider.new(email: 'provider@zoomerrands.com', password: '12345678', phone1: '+8613714486044', zoom_office: la)
+provider = Provider.new(email: 'provider@zoomerrands.com', password: '12345678', \
+							 phone1: '+8613714486044', zoom_office: la, active: true)
 provider.skip_confirmation!
 provider.save!
