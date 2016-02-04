@@ -17,4 +17,29 @@ class Api::V1::EscrowHoursController < Api::V1::BaseController
 	def show
 		render json: {eh: current_client.escrow_hour} 
 	end
+
+    def charge
+      # Amount in cents
+      @amount = 50000
+      mail = params[:stripeEmail] || current_client.email
+      description = mail + ' charged $' + (@amount/100.0).to_s + '.'
+
+      customer = Stripe::Customer.create(
+        :email => mail,
+        :source  => params[:stripeToken]
+      )
+
+      charge = Stripe::Charge.create(
+        :customer    => customer.id,
+        :amount      => @amount,
+        :description => description,
+        :currency    => 'usd'
+      )
+
+      render json: { charge: charge }
+
+    rescue Stripe::CardError => e
+        render json: {error: e.message}, status: 422
+      
+    end
 end
