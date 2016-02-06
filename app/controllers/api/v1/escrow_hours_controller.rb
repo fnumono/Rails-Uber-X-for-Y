@@ -41,6 +41,8 @@ class Api::V1::EscrowHoursController < Api::V1::BaseController
 
   def charge
     # Amount in cents
+    params[:purchaseEscrow] = 0 if params[:purchaseEscrow].blank?
+    params[:purchaseHour] = 0 if params[:purchaseHour].blank?    
     charge_metadata = {purchaseHour: params[:purchaseHour], purchaseEscrow: params[:purchaseEscrow]}
     @amount = calc_amount(params[:purchaseHour], params[:purchaseEscrow])
     render json: {error: 'Invalid purchaseHour or purchaseEscrow'}, status: 400 and return  if @amount < 0
@@ -80,8 +82,15 @@ class Api::V1::EscrowHoursController < Api::V1::BaseController
       :metadata    => charge_metadata
     )
 
+    eh = current_client.escrow_hour
+    current_client.escrow_hour.hoursavail += params[:purchaseHour]
+    current_client.escrow_hour.escrowavail += params[:purchaseEscrow]
+    if !current_client.escrow_hour.save
+      render json: { error: 'Failed on Saving client information. Please contact with Support team'}, status: 422 and return
+    end
+      
     @charge = Charge.create!(amount: @final_amount, coupon: @coupon, stripe_id: stripe_charge.id)
-    render json: { charge: @charge }
+    render json: { charge: @charge, purchaseHour: params[:purchaseHour], purchaseEscrow: params[:purchaseEscrow] }
 
   rescue Stripe::CardError => e
       render json: {error: e.message}, status: 422
@@ -106,23 +115,24 @@ class Api::V1::EscrowHoursController < Api::V1::BaseController
       amount = 0
       hour = hour.to_f
       escrow = escrow.to_f
-      if hour >= 40
-        amount = escrow + hour * 25
-      elsif hour >=30
-        amount = escrow + hour * 26
-      elsif hour >=20
-        amount = escrow + hour * 26.75
-      elsif hour >=10
-        amount = escrow + hour * 27.5
-      elsif hour >=5
-        amount = escrow + hour * 29
-      elsif hour >=1
-        amount = escrow + hour * 32
-      elsif hour >=0
-        amount = escrow + hour * 32
-      else
-        amount = -1
-      end
+      # if hour >= 40
+      #   amount = escrow + hour * 25
+      # elsif hour >=30
+      #   amount = escrow + hour * 26
+      # elsif hour >=20
+      #   amount = escrow + hour * 26.75
+      # elsif hour >=10
+      #   amount = escrow + hour * 27.5
+      # elsif hour >=5
+      #   amount = escrow + hour * 29
+      # elsif hour >=1
+      #   amount = escrow + hour * 32
+      # elsif hour >=0
+      #   amount = escrow + hour * 32
+      # else
+      #   amount = -1
+      # end
+      amount = escrow + hour * 35
       amount            
     end
 
