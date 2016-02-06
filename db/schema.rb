@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160123111615) do
+ActiveRecord::Schema.define(version: 20160204082431) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,14 @@ ActiveRecord::Schema.define(version: 20160123111615) do
   add_index "admins", ["email"], name: "index_admins_on_email", unique: true, using: :btree
   add_index "admins", ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true, using: :btree
   add_index "admins", ["zoom_office_id"], name: "index_admins_on_zoom_office_id", using: :btree
+
+  create_table "charges", force: :cascade do |t|
+    t.integer  "amount"
+    t.integer  "coupon_id"
+    t.integer  "stripe_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "clients", force: :cascade do |t|
     t.string   "provider",               default: "email", null: false
@@ -95,6 +103,15 @@ ActiveRecord::Schema.define(version: 20160123111615) do
   add_index "clients", ["uid", "provider"], name: "index_clients_on_uid_and_provider", unique: true, using: :btree
   add_index "clients", ["zoom_office_id"], name: "index_clients_on_zoom_office_id", using: :btree
 
+  create_table "coupons", force: :cascade do |t|
+    t.string   "code"
+    t.integer  "discount_percent"
+    t.datetime "expires_at"
+    t.string   "description"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
   create_table "escrow_hours", force: :cascade do |t|
     t.float    "hoursavail",  default: 0.0
     t.float    "hoursused",   default: 0.0
@@ -106,6 +123,13 @@ ActiveRecord::Schema.define(version: 20160123111615) do
   end
 
   add_index "escrow_hours", ["client_id"], name: "index_escrow_hours_on_client_id", using: :btree
+
+  create_table "fees", force: :cascade do |t|
+    t.integer  "percent"
+    t.integer  "cent",       default: 0
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
 
   create_table "providers", force: :cascade do |t|
     t.string   "provider",                    default: "email", null: false

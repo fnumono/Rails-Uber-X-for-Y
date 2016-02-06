@@ -34,3 +34,9 @@ provider = Provider.new(email: 'provider@zoomerrands.com', password: '12345678',
 							 phone1: '+8613714486044', zoom_office: la, active: true)
 provider.skip_confirmation!
 provider.save!
+
+
+Coupon.create!(code: '12345', discount_percent: '10', description: 'Save 10 percent')
+Coupon.create!(code: 'ABCDE', discount_percent: '30', description: 'Save 30 percent')    
+
+Fee.create!(percent: 5, cent: 150)

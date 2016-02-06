@@ -32,6 +32,8 @@ Rails.application.routes.draw do
         put 'tasks/:id/complete' => 'tasks#complete'
         resources :tasks        
         get 'escrowhours' => 'escrow_hours#show'
+        get 'escrowhours/fee' => 'escrow_hours#fee'
+        get 'escrowhours/coupon_check' => 'escrow_hours#coupon_check'
         post 'escrowhours/charge' => 'escrow_hours#charge'
       end
 
