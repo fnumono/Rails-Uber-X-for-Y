@@ -45,7 +45,7 @@ class Task < ActiveRecord::Base
       providers = Provider.joins(:setting)\
                           .joins('INNER JOIN settings_types ON settings.id = settings_types.setting_id')\
                           .where('settings_types.type_id = ?', self.type_id)\
-                          .where(active: true)
+                          .where(active: true).where('settings.available = ?', true)
       providers = providers.select(query,'*').order("dist").limit(limit)
     end    
 

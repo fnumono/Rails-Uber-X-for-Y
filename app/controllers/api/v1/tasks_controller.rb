@@ -178,12 +178,12 @@ class Api::V1::TasksController < Api::V1::BaseController
 
     def task_params      
         params.require(:task).permit(:title, :datetime, :address, :addrlat, :addrlng, :contact, :type_id, \
-                  :details, :escrowable, :zoom_office_id, task_uploads_attributes:[:id, :upload])      
+                  :details, :escrowable, :zoom_office_id, :city, task_uploads_attributes:[:id, :upload])      
     end
 
     def update_task_params      
         params.require(:task).permit(:title, :datetime, :address,  :addrlat, :addrlng, :contact, :type_id, \
-                  :details, :escrowable, :zoom_office_id, task_uploads_attributes:[:id, :upload])      
+                  :details, :escrowable, :zoom_office_id, :city, task_uploads_attributes:[:id, :upload])      
     end
 
     def complete_task_params

@@ -25,6 +25,7 @@ class Client < ActiveRecord::Base
   	a = super
   	a[:photoUrl] = nil
     a[:photoThumbUrl] = nil
+    a[:escrow_hour] = nil
   	a
   end
 

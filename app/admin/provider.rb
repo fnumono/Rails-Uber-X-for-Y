@@ -40,6 +40,9 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 	  column :proofinsurance do |provider|
 	  	link_to 'Insurance', provider.proofinsurance.url
 	  end
+	  column :available do |provider|
+	  	provider.setting.available
+	  end
 	  column :sms do |provider|
 	  	provider.setting.sms
 	  end
@@ -62,6 +65,7 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 		  	provider.setting.types.map { |type| type.name  }
 		  end 
 	  column :active
+
 
 	  actions	
 	end

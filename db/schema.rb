@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160204082431) do
+ActiveRecord::Schema.define(version: 20160217112713) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -196,6 +196,7 @@ ActiveRecord::Schema.define(version: 20160204082431) do
     t.datetime "updated_at",                     null: false
     t.boolean  "sms",             default: true
     t.boolean  "email",           default: true
+    t.boolean  "available",       default: true
   end
 
   add_index "settings", ["provider_id"], name: "index_settings_on_provider_id", using: :btree
@@ -238,6 +239,7 @@ ActiveRecord::Schema.define(version: 20160204082431) do
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
     t.integer  "zoom_office_id"
+    t.string   "city"
   end
 
   add_index "tasks", ["client_id"], name: "index_tasks_on_client_id", using: :btree

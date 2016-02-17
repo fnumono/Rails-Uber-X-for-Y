@@ -38,8 +38,13 @@ class Api::V1::SettingController < Api::V1::BaseController
       end
     
     else
-      current_provider.setting.update(sms: params[:sms], email: params[:email])
+      current_provider.setting.update(update_setting_params)
       render json: {message: 'Your notification setting has been updated!'}
     end  
   end
+
+  private
+    def update_setting_params
+      params.permit(:sms, :email, :available)
+    end
 end
