@@ -132,28 +132,25 @@ ActiveAdmin.register Client do
     panel "Client Errand History" do
       table_for client.tasks.order(datetime: :DESC) do
         column :id
-        column 'Title' do |task|
-        	link_to task.title, admin_task_path(task)
-        end
-        column :datetime
-        column 'Type' do |task|
-        	task.type.name
-        end
-        column 'Provider' do |task|
-        	link_to "#{task.provider.fname} #{task.provider.lname}", admin_provider_path(task.provider) \
-        	if !task.provider.nil?
-        end        
-        column 'Office' do |task|
-			  	task.zoom_office.longName
-			  end
-        column :address
-        column :contact
-        column :escrowable 
-        column :usedHour
-        column :usedEscrow
-        column :status
-        column :created_at
-        column :updated_at  
+				column 'Errand Title' do |task|
+					link_to task.title, admin_task_path(task)
+				end
+				column 'Errand Date', :datetime
+				column 'Office' do |task|
+					task.zoom_office.longName if !task.zoom_office.nil?
+				end				
+				column 'Contact #', :contact
+				column 'Provider' do |task|
+		    	link_to "#{task.provider.fname} #{task.provider.lname}", admin_provider_path(task.provider) \
+		    	if !task.provider.nil?
+		    end  
+				column 'Type' do |task|
+					task.type.name if !task.type.nil?
+				end
+				column 'Start Address', :address, sortable: false				
+				column 'Escrow Used', :usedEscrow
+				column 'Hours Used', :usedHour
+				column :status
 
       end
     end  

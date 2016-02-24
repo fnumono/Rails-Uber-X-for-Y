@@ -132,28 +132,25 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
     panel "Provider Errands History" do
       table_for provider.tasks.order(datetime: :DESC) do
         column :id
-        column 'Title' do |task|
-        	link_to task.title, admin_task_path(task)
-        end
-        column :datetime
-        column 'Type' do |task|
-        	task.type.name
-        end
-        column :client do |task|
-        	link_to "#{task.client.fname} #{task.client.lname}", admin_client_path(task.client) \
-        	if !task.client.nil?
-        end        
-        column 'Office' do |task|
-			  	task.zoom_office.longName
-			  end
-        column :address
-        column :contact
-        column :escrowable 
-        column :usedHour
-        column :usedEscrow
-        column :status
-        column :created_at
-        column :updated_at 
+				column 'Errand Title' do |task|
+					link_to task.title, admin_task_path(task)
+				end
+				column 'Errand Date', :datetime
+				column 'Office' do |task|
+					task.zoom_office.longName if !task.zoom_office.nil?
+				end
+				column "Client" do |task|
+					link_to "#{task.client.fname} #{task.client.lname}", admin_client_path(task.client) \
+					if !task.client.nil?
+				end  
+				column 'Contact #', :contact				
+				column 'Type' do |task|
+					task.type.name if !task.type.nil?
+				end
+				column 'Start Address', :address, sortable: false				
+				column 'Escrow Used', :usedEscrow
+				column 'Hours Used', :usedHour
+				column :status
       end
     end  
 
