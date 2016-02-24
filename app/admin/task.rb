@@ -1,5 +1,7 @@
 ActiveAdmin.register Task do
 
+	menu priority: 1, label: 'Errands'
+
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
@@ -14,6 +16,18 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
 #   permitted
 # end
 
+	scope "All", if: proc { true } do |tasks|
+	  tasks.all
+	end
+
+	scope "Open", if: proc { true } do |tasks|
+	  tasks.where(status: 'open')
+	end
+
+	scope "Close", if: proc { true } do |tasks|
+	  tasks.where(status: 'close')
+	end
+
 	controller do
     def scoped_collection    	
     	if current_admin.email == 'superadmin@zoomerrands.com'
@@ -25,64 +39,65 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
     end
   end
 
-	index do
+	index :title => 'Errands' do
 		selectable_column
 		column :id
-		column 'Title' do |task|
+		column 'Errand Title' do |task|
 			link_to task.title, admin_task_path(task)
 		end
-		column :datetime
-		column 'Type' do |task|
-			task.type.name if !task.type.nil?
-		end
-		column :client do |task|
-			link_to "#{task.client.fname} #{task.client.lname}", admin_client_path(task.client) \
-			if !task.client.nil?
-		end   
-		column 'Provider' do |task|
-    	link_to "#{task.provider.fname} #{task.provider.lname}", admin_provider_path(task.provider) \
-    	if !task.provider.nil?
-    end         
+		column 'Errand Date', :datetime
 		column 'Office' do |task|
 			task.zoom_office.longName if !task.zoom_office.nil?
 		end
-		column :address
-		column :addrlat
-		column :addrlng
-		column :contact
-		column :escrowable 
-		column :usedHour
-		column :usedEscrow
+		column "Client" do |task|
+			link_to "#{task.client.fname} #{task.client.lname}", admin_client_path(task.client) \
+			if !task.client.nil?
+		end  
+		column 'Contact #', :contact
+		column 'Provider' do |task|
+    	link_to "#{task.provider.fname} #{task.provider.lname}", admin_provider_path(task.provider) \
+    	if !task.provider.nil?
+    end  
+		column 'Type' do |task|
+			task.type.name if !task.type.nil?
+		end
+		column 'Start Address', :address, sortable: false
+		# column :addrlat
+		# column :addrlng
+		# column 'Escrow Usable', :escrowable 
+		column 'Escrow Used', :usedEscrow
+		column 'Hours Used', :usedHour
 		column :status
-		column :created_at
-		column :updated_at 
+		# column :created_at
+		# column :updated_at 
 
 		actions
 	end
 
-	show do
-    attributes_table do
+	show  do
+    attributes_table  do
       row :id
 			row :title
 			row :datetime
-			row 'Type' do |task|
-				task.type.name
+			row 'Office' do |task|
+				task.zoom_office.longName
 			end
 			row :client do |task|
 				link_to "#{task.client.fname} #{task.client.lname}", admin_client_path(task.client) \
 				if !task.client.nil?
-			end   
+			end 
+			row :contact
 			row 'Provider' do |task|
 	    	link_to "#{task.provider.fname} #{task.provider.lname}", admin_provider_path(task.provider) \
 	    	if !task.provider.nil?
-	    end         
-			row 'Office' do |task|
-				task.zoom_office.longName
+	    end   
+			row 'Type' do |task|
+				task.type.name
 			end
 			row :address
 			row :addrlat
 			row :addrlng
-			row :contact
+			
 			row :details
 			row :escrowable 
 			row :usedHour

@@ -4,7 +4,7 @@ ActiveAdmin.register Provider do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :driverlicense, \
-		:proofinsurance,	:phone2, :photo, :city, :state, :zip, :addrlat, :addrlng, :zoom_Office_id
+		:proofinsurance,	:phone2, :photo, :city, :state, :zip, :addrlat, :addrlng, :zoom_Office_id, setting_attributes:[type_ids:[]]
 
 	controller do
     def scoped_collection    	
@@ -29,8 +29,8 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 	  column 'ZoomOffice' do |client|
 	  	client.zoom_office.longName if !client.zoom_office.nil?
 	  end  
-	  column :address1
-	  column :address2	  
+	  column :address1, sortable: false
+	  column :address2, sortable: false	  
 	  column :phone1
 	  column :addrlat
 	  column :addrlng
@@ -129,7 +129,7 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 		  row :active 
     end
 
-    panel "Provider Task History" do
+    panel "Provider Errands History" do
       table_for provider.tasks.order(datetime: :DESC) do
         column :id
         column 'Title' do |task|
@@ -161,13 +161,14 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
   end
 
 	form do |f|
-	  f.semantic_errors # shows errors on :base
+	  f.semantic_errors # shows errors on :base	  
 	  
 	  f.inputs "Provider" do          # builds an input field for every attribute
 	  	f.input :email
 	  	f.input :photo
 	  	f.input :fname
-	  	f.input :lname
+	  	f.input :lname  	
+
 	  	f.input :zoom_office, as: :select, multiple: false, \
 	  					:collection => ZoomOffice.all.map{ |office| [office.longName, office.id] }, :prompt => 'Select one'
 	  	f.input :address1
@@ -178,6 +179,10 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 	  	f.input :driverlicense
 	  	f.input :proofinsurance
 	  	f.input :active	 
+	  	f.has_many :setting, new_record: false do |t|
+		  	t.input :type_ids, :label => "Job Type", as: :select, multiple: true, \
+		  					:collection => Type.all.map{ |type| [type.name, type.id] }, :prompt => 'Select one'
+		  end
 	  	# f.inputs  do
 				# f.has_many :setting do |a|
 		  #   	# a.input :sms

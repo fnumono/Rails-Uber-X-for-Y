@@ -1,6 +1,8 @@
 class Provider < ActiveRecord::Base
   # Include default devise modules.
   has_one :setting, dependent: :destroy
+  accepts_nested_attributes_for :setting
+  
   has_many :tasks
   belongs_to :zoom_office
   

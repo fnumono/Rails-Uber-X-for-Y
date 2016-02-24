@@ -2,4 +2,4 @@
 #= require select2
 
 $(document).ready ->
-	$("#setting_type_ids").select2 width: "25%"
+	$("#provider_setting_attributes_type_ids").select2 width: "40%"

@@ -27,7 +27,7 @@ ActiveAdmin.register Client do
 	  column :email
 	  column :fname
 	  column :lname	  
-	  column :address1
+	  column :address1, sortable: false
 	  column :city
 	  column :state
 	  column :zip	  
@@ -129,7 +129,7 @@ ActiveAdmin.register Client do
 		  row :updated_at
 		end
 		
-    panel "Client Task History" do
+    panel "Client Errand History" do
       table_for client.tasks.order(datetime: :DESC) do
         column :id
         column 'Title' do |task|
