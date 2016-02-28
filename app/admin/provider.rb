@@ -4,7 +4,7 @@ ActiveAdmin.register Provider do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :driverlicense, \
-		:proofinsurance,	:phone2, :photo, :city, :state, :zip, :addrlat, :addrlng, :zoom_Office_id, setting_attributes:[type_ids:[]]
+		:proofinsurance,	:phone2, :photo, :city, :state, :zip, :addrlat, :addrlng, :zoom_office_id, setting_attributes:[type_ids:[]]
 
 	controller do
     def scoped_collection    	

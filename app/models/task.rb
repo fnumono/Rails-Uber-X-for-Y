@@ -42,11 +42,16 @@ class Task < ActiveRecord::Base
 
     def select_nearest_sametype_providers(limit)
       query = 'abs(addrlat-(' + self.addrlat.to_s + ')) + abs(addrlng-(' + self.addrlng.to_s + ')) AS dist'
+      busy_provider_ids = Provider.joins(:tasks).where('tasks.status = ? and tasks.datetime >= ? and tasks.datetime <= ?', \
+                              'open', self.datetime-2.hours, self.datetime+2.hours).pluck(:id).uniq
       providers = Provider.joins(:setting)\
                           .joins('INNER JOIN settings_types ON settings.id = settings_types.setting_id')\
+                          .where.not(id: busy_provider_ids)\
                           .where('settings_types.type_id = ?', self.type_id)\
-                          .where(active: true).where('settings.available = ?', true)
-      providers = providers.select(query,'*').order("dist").limit(limit)
+                          .where('settings.available = ?', true)\
+                          .where(active: true)\
+                          .select(query,'providers.id').distinct.order("dist").limit(limit)
+      providers 
     end    
 
     def update_client_escrow_hour

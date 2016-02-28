@@ -7,8 +7,8 @@ class Provider < ActiveRecord::Base
   belongs_to :zoom_office
   
   devise :database_authenticatable, :registerable,
-          :recoverable, :rememberable, :trackable, :validatable,
-          :confirmable, :omniauthable
+          :recoverable, :rememberable, :trackable, :validatable
+          # ,:confirmable, :omniauthable
   include DeviseTokenAuth::Concerns::User
 
   after_create :create_setting
