@@ -6,15 +6,16 @@ class Api::V1::TasksController < Api::V1::BaseController
   before_action :find_mytask!, only: [:destroy, :upload, :update, :complete]
   before_action :find_task!, only: [:show, :accept]
  
-  def index
-    params[:offset] = 0 if params[:offset].blank?
-    if params[:limit].blank?
-      tasks = Task.all
-    else
-      tasks = Task.order(status: :desc, datetime: :desc).limit(params[:limit]).offset(params[:offset])
-    end      
-    render json: tasks
-  end
+  # def index
+  #   params[:offset] = 0 if params[:offset].blank?
+  #   if params[:limit].blank?
+  #     tasks = Task.all
+  #   else
+  #     tasks = Task.order(status: :desc, datetime: :desc).limit(params[:limit]).offset(params[:offset])
+  #     moredata = !Task.order(status: :desc, datetime: :desc).limit(1).offset(params[:offset].to_i + params[:limit].to_i).nil?
+  #   end      
+  #   render json: {tasks: tasks, moredata: moredata}
+  # end
 
   def show    
     render json: @task
@@ -26,8 +27,9 @@ class Api::V1::TasksController < Api::V1::BaseController
       tasks = current_agent.tasks.order(status: :desc, datetime: :desc)
     else 
       tasks = current_agent.tasks.order(status: :desc, datetime: :desc).limit(params[:limit]).offset(params[:offset])
+      moredata = !current_agent.tasks.order(status: :desc, datetime: :desc).limit(1).offset(params[:offset].to_i+params[:limit].to_i).blank?
     end
-    render json: tasks
+    render json: {tasks: tasks, moredata: moredata}
   end
 
   
