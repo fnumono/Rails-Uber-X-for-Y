@@ -114,25 +114,24 @@ class Api::V1::EscrowHoursController < Api::V1::BaseController
     def calc_hour_to_amount(hour) 
       amount = 0
       hour = hour.to_f
-      escrow = escrow.to_f
-      # if hour >= 40
-      #   amount = escrow + hour * 25
-      # elsif hour >=30
-      #   amount = escrow + hour * 26
-      # elsif hour >=20
-      #   amount = escrow + hour * 26.75
-      # elsif hour >=10
-      #   amount = escrow + hour * 27.5
-      # elsif hour >=5
-      #   amount = escrow + hour * 29
-      # elsif hour >=1
-      #   amount = escrow + hour * 32
-      # elsif hour >=0
-      #   amount = escrow + hour * 32
-      # else
-      #   amount = -1
-      # end
-      amount = escrow + hour * 35
+      if hour >= 40
+        amount = hour * 25
+      elsif hour >=30
+        amount = hour * 26
+      elsif hour >=20
+        amount = hour * 26.75
+      elsif hour >=10
+        amount = hour * 27.5
+      elsif hour >=5
+        amount = hour * 29
+      elsif hour >=1
+        amount = hour * 32
+      elsif hour >=0
+        amount = hour * 32
+      else
+        amount = -1
+      end
+      # amount = escrow + hour * 35
       amount            
     end
 
