@@ -43,11 +43,9 @@ class Api::V1::EscrowHoursController < Api::V1::BaseController
     # Amount in cents
     params[:purchaseEscrow] = 0 if params[:purchaseEscrow].blank?
     params[:purchaseHour] = 0 if params[:purchaseHour].blank?    
-    charge_metadata = {purchaseHour: params[:purchaseHour], purchaseEscrow: params[:purchaseEscrow]}
-    @amount = calc_amount(params[:purchaseHour], params[:purchaseEscrow])
-    render json: {error: 'Invalid purchaseHour or purchaseEscrow'}, status: 400 and return  if @amount < 0
-    
-    @final_amount = @amount
+    mail = params[:stripeEmail] || current_client.email
+    charge_metadata = {purchaseHour: params[:purchaseHour], purchaseEscrow: params[:purchaseEscrow], \
+                        email: mail}    
 
     code = params[:couponCode]
 
@@ -55,27 +53,29 @@ class Api::V1::EscrowHoursController < Api::V1::BaseController
       @coupon = Coupon.get(code)
 
       if @coupon.nil?
-        render json: {error: 'Coupon code is not valid or expired.'}, status: 400 and return        
-      else
-        @final_amount = @coupon.apply_discount(@amount.to_i)
-        @discount_amount = (@amount - @final_amount)
+        render json: {error: 'Coupon code is not valid or expired.'}, status: 400 and return 
       end
 
       charge_metadata[:coupon_code] = @coupon.code
-      charge_metadata[:coupon_discount] = @coupon.discount_percent_human
-      
+      charge_metadata[:coupon_discount] = @coupon.discount_percent_human      
     end
 
-    mail = params[:stripeEmail] || current_client.email
+    @amount = calc_amount(params[:purchaseHour], params[:purchaseEscrow], @coupon)
+    @final_amount = ((@amount + params[:otherPayment].to_f) * 100).to_i  #cent unit
+    render json: {error: 'Invalid purchaseHour or purchaseEscrow'}, status: 400 and return  if @final_amount <= 0
+
+    
     description = mail + ' charged $' + (@final_amount/100.0).to_s  
 
-    customer = Stripe::Customer.create(
-      :email => mail,
-      :source  => params[:stripeToken]
-    )
+    # customer = Stripe::Customer.create(
+    #   :email => mail,
+    #   :source  => params[:stripeToken]
+    # )
 
     stripe_charge = Stripe::Charge.create(
-      :customer    => customer.id,
+      # :customer    => customer.id,
+      # :email => mail,
+      :source  => params[:stripeToken],
       :amount      => @final_amount,
       :description => description,
       :currency    => 'usd',
@@ -99,16 +99,17 @@ class Api::V1::EscrowHoursController < Api::V1::BaseController
 
   private
 
-    def calc_amount(hour, escrow)
+    def calc_amount(hour, escrow, coupon)
       amount = 0 
       fee = Fee.first
       hour_amount = calc_hour_to_amount(hour)
+      hour_amount = coupon.apply_discount(hour_amount.to_i) unless coupon.nil?
       if (hour < 0) || (escrow < 0) || (hour_amount < 0)
         amount = -1
       else 
-        amount = (hour_amount + escrow)*(1 + fee.percent*0.01) + fee.cent*0.01;  # $unit
+        amount = hour_amount + (escrow*(1 + fee.percent*0.01) + fee.cent*0.01);  # $unit
       end
-      (amount * 100).to_i  #cent unit
+      amount
     end
 
     def calc_hour_to_amount(hour) 
