@@ -2,6 +2,7 @@ class Client < ActiveRecord::Base
   has_many :tasks
   has_one :escrow_hour, dependent: :destroy
   belongs_to :zoom_office
+  has_many :notifications
 
   accepts_nested_attributes_for :escrow_hour, allow_destroy: true
 
