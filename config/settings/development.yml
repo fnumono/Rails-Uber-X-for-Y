@@ -1,5 +1,5 @@
 host_url: http://localhost:3000
-angular_url: http://192.168.10.102:3011
+angular_url: http://lvh.me:3011
 
 facebook:
  key: 1724095974486718

@@ -2,11 +2,11 @@ class Client < ActiveRecord::Base
   has_many :tasks
   has_one :escrow_hour, dependent: :destroy
   belongs_to :zoom_office
-  has_many :notifications
+  has_many :notifications, dependent: :destroy
 
   accepts_nested_attributes_for :escrow_hour, allow_destroy: true
 
-  after_create :new_escrow_hour
+  after_create :new_escrow_hour_notification
   before_destroy :release_task
 
   # Include default devise modules.
@@ -18,8 +18,10 @@ class Client < ActiveRecord::Base
   has_attached_file :photo, styles: { medium: "160x160!", thumb: "40x40!" }, default_url: "/images/:style/missing.png"
   validates_attachment_content_type :photo, content_type: /\Aimage\/.*\Z/
 
-  def new_escrow_hour
+  def new_escrow_hour_notification
     EscrowHour.create(client_id: id)
+    self.notifications.create(type: Settings.notnotify_user, name: 'Account created', \
+            text: 'Confirmation email has been sent to ' + self.email + '.')
   end
   
   def attributes
