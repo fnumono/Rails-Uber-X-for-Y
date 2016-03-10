@@ -152,7 +152,7 @@ class Api::V1::TasksController < Api::V1::BaseController
     params[:usedHour] = params[:usedHour].blank? ? 0 : params[:usedHour].to_f.abs
     params[:usedEscrow] = params[:usedEscrow].blank? ? 0 : params[:usedEscrow].to_f.abs
     
-    begin      
+    begin        
       @task.update!(complete_task_params)
       # ZoomMailWorker.perform_in(2.seconds, @task.id, 0, 'closed')
       render json: @task
