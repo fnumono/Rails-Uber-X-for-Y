@@ -63,3 +63,4 @@ gem 'sidekiq'
 gem 'sinatra'
 gem 'twilio-ruby'
 gem 'stripe'
+gem 'rubocop', require: false

@@ -90,6 +90,24 @@ class Api::V1::EscrowHoursController < Api::V1::BaseController
     end
       
     @charge = Charge.create!(amount: @final_amount, coupon: @coupon, stripe_id: stripe_charge.id)
+
+    if (params[:purchaseEscrow] != 0) && (params[:purchaseHour] != 0)
+      current_client.notifications.create(notify_type: Settings.notify_finance, name: "Purchase hours and fund escrow", \
+        text: "Purchase hours: " + params[:purchaseHour].to_s + ", Fund escorw: $" + params[:purchaseEscrow].to_s)
+    elsif (params[:purchaseEscrow] == 0) && (params[:purchaseHour] != 0)
+      current_client.notifications.create(notify_type: Settings.notify_finance, name: "Purchase hours", \
+        text: "Purchase hours: " + params[:purchaseHour].to_s)
+    elsif (params[:purchaseEscrow] != 0) && (params[:purchaseHour] == 0)
+      current_client.notifications.create(notify_type: Settings.notify_finance, name: "Fund escrow", \
+        text: "Fund escrow: $" + params[:purchaseEscrow].to_s)  
+    end
+
+    unless (params[:otherPayment] == 0)
+      current_client.notifications.create(notify_type: Settings.notify_finance, name: "Other payment", \
+        text: "Payment amount: $" + params[:otherPayment].to_s)  
+    end
+
+
     render json: { charge: @charge, purchaseHour: params[:purchaseHour], purchaseEscrow: params[:purchaseEscrow] }
 
   rescue Stripe::CardError => e
@@ -102,12 +120,12 @@ class Api::V1::EscrowHoursController < Api::V1::BaseController
     def calc_amount(hour, escrow, coupon)
       amount = 0 
       fee = Fee.first
-      hour_amount = calc_hour_to_amount(hour)
+      hour_amount = calc_hour_to_amount(hour.to_f)
       hour_amount = coupon.apply_discount(hour_amount.to_i) unless coupon.nil?
       if (hour < 0) || (escrow < 0) || (hour_amount < 0)
         amount = -1
       else 
-        amount = hour_amount + (escrow*(1 + fee.percent*0.01) + fee.cent*0.01);  # $unit
+        amount = hour_amount + (escrow.to_f*(1 + fee.percent*0.01) + fee.cent*0.01);  # $unit
       end
       amount
     end

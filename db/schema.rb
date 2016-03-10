@@ -132,12 +132,12 @@ ActiveRecord::Schema.define(version: 20160305160941) do
   end
 
   create_table "notifications", force: :cascade do |t|
-    t.integer  "type",       default: 0
+    t.integer  "notify_type", default: 0
     t.string   "name"
     t.string   "text"
     t.integer  "client_id"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   add_index "notifications", ["client_id"], name: "index_notifications_on_client_id", using: :btree

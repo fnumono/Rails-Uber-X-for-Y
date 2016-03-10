@@ -18,9 +18,16 @@ class Client < ActiveRecord::Base
   has_attached_file :photo, styles: { medium: "160x160!", thumb: "40x40!" }, default_url: "/images/:style/missing.png"
   validates_attachment_content_type :photo, content_type: /\Aimage\/.*\Z/
 
+  
+  # Override Devise::Confirmable#after_confirmation
+  def after_confirmation
+    self.notifications.create(notify_type: Settings.notify_user, name: 'Signed up successfully.', \
+            text: 'Your account has been created successfully.')
+  end
+
   def new_escrow_hour_notification
     EscrowHour.create(client_id: id)
-    self.notifications.create(type: Settings.notnotify_user, name: 'Account created', \
+    self.notifications.create(notify_type: Settings.notify_user, name: 'Thank you.', \
             text: 'Confirmation email has been sent to ' + self.email + '.')
   end
   

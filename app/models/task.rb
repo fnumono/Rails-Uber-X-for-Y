@@ -25,8 +25,8 @@ class Task < ActiveRecord::Base
     def send_complete_notification_provider_client
       if (self.status == 'close')
         ZoomMailWorker.perform_in(2.seconds, self.id, 0, 'closed')
-        self.client.notifications.create(type: Settings.notnotify_errand, name: 'Errand Completed', \
-            text: 'Errand  ' + self.title + ' has been completed.<br/>Hours used: ' + self.usedHour + \
+        self.client.notifications.create(notify_type: Settings.notify_errand, name: 'Errand Completed', \
+            text: 'Errand  ' + self.title + ' has been completed. Hours used: ' + self.usedHour + \
             '<br/>Escrow used: ' + self.usedEscrow)
       end 
     end
@@ -42,7 +42,7 @@ class Task < ActiveRecord::Base
         end
       end 
 
-      self.client.notifications.create(type: Settings.notnotify_errand, name: 'New Errand Posted', \
+      self.client.notifications.create(notify_type: Settings.notify_errand, name: 'New Errand Posted', \
             text: 'You posted a new errand ' + self.title + '.')
     end
 
