@@ -64,3 +64,4 @@ gem 'sinatra'
 gem 'twilio-ruby'
 gem 'stripe'
 gem 'rubocop', require: false
+gem 'airbrake', '~> 5.1'
