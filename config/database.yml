@@ -17,6 +17,9 @@ default: &default
 development:
   <<: *default
   database: zoom_errands
+  password: zoom12345
+  host: zoomrds.cidcjzz8wdwn.us-west-1.rds.amazonaws.com
+  pool: 10
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
