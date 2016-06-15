@@ -43,7 +43,7 @@ class Task < ActiveRecord::Base
       end 
 
       self.client.notifications.create(notify_type: Settings.notify_errand, name: 'New Errand Posted', \
-            text: 'You posted a new errand ' + self.title + '.')
+            text: 'You posted a new errand ' + self.try(:title).to_s + '.')
     end
 
     def select_nearest_sametype_providers(limit)

@@ -51,12 +51,11 @@ class Api::V1::TasksController < Api::V1::BaseController
   end
 
   def create
-    tparams = params[:task]
-    if tparams[:datetime].blank?
+    if task_params[:datetime].blank?
       render json: {alert: 'Date and Time format is not proper.'}, status: 400 and return
     end
 
-    if Task.find_by_title_and_datetime_and_address(tparams[:title],tparams[:datetime],tparams[:address])
+    if Task.find_by_title_and_datetime_and_address(task_params[:title],task_params[:datetime],task_params[:address])
       if !params[:force]
         render json: {alert: 'Same task already has been submitted.'}, status: 422 and return
       end
@@ -71,11 +70,14 @@ class Api::V1::TasksController < Api::V1::BaseController
     # task.zoom_office = zoomoffice
     task.client = current_client
     task.status = 'open'
-      if task.save        
-        render json: task, status: :created
-      else
-        render json: {errors: task.errors}, status: 401
-      end
+    if task.save
+      if task_uploads_params[:task_uploads].present?
+        TaskUpload.where(id: task_uploads_params[:task_uploads].values.flatten.map{|v| v[:id]}, task_id: nil).update_all("task_id = #{task.id}")
+      end        
+      render json: task, status: :created
+    else
+      render json: {errors: task.errors}, status: 401
+    end
   end
 
   def update
@@ -108,6 +110,18 @@ class Api::V1::TasksController < Api::V1::BaseController
     end    
   end
 
+  def upload_files
+    files = []
+    params[:file].each do |file|
+      upload = TaskUpload.new(upload: file[1], category: params[:category])
+      if !upload.save
+        render json: {errors: upload.errors}, status: 422
+        return
+      end
+      files << {id: upload.id, thumbUrl: upload.uploadThumbUrl, uploadUrl: upload.uploadUrl}
+    end
+    render json: files, root: false
+  end
 
   def upload
     upload = @task.task_uploads.new(task_upload_params)
@@ -179,12 +193,16 @@ class Api::V1::TasksController < Api::V1::BaseController
     end
 
     def task_params      
-        params.require(:task).permit(:title, :datetime, :address, :addrlat, :addrlng, :contact, :type_id, \
-                  :details, :escrowable, :zoom_office_id, :city, task_uploads_attributes:[:id, :upload])      
+      params.require(:task).permit(:title, :datetime, :address, :addrlat, :addrlng, :contact, :type_id, \
+                  :details, :escrowable, :zoom_office_id, :city, :frequency, :unit, :funds, :funds_details)      
+    end
+
+    def task_uploads_params
+      params.require(:task).permit(task_uploads: [normal: [:id], funds: [:id]])
     end
 
     def update_task_params      
-        params.require(:task).permit(:title, :datetime, :address,  :addrlat, :addrlng, :contact, :type_id, \
+      params.require(:task).permit(:title, :datetime, :address,  :addrlat, :addrlng, :contact, :type_id, \
                   :details, :escrowable, :zoom_office_id, :city, task_uploads_attributes:[:id, :upload])      
     end
 

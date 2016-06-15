@@ -30,6 +30,7 @@ Rails.application.routes.draw do
         post 'tasks/:id/upload' => 'tasks#upload'
         put 'tasks/:id/accept' => 'tasks#accept'
         put 'tasks/:id/complete' => 'tasks#complete'
+        post 'tasks/upload_files' => 'tasks#upload_files'
         resources :tasks        
         get 'escrowhours' => 'escrow_hours#show'
         get 'escrowhours/fee' => 'escrow_hours#fee'

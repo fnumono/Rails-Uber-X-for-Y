@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160305160941) do
+ActiveRecord::Schema.define(version: 20160614164547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -228,6 +228,7 @@ ActiveRecord::Schema.define(version: 20160305160941) do
     t.string   "upload_content_type"
     t.integer  "upload_file_size"
     t.datetime "upload_updated_at"
+    t.string   "category"
   end
 
   add_index "task_uploads", ["task_id"], name: "index_task_uploads_on_task_id", using: :btree
@@ -251,6 +252,10 @@ ActiveRecord::Schema.define(version: 20160305160941) do
     t.datetime "updated_at",                      null: false
     t.integer  "zoom_office_id"
     t.string   "city"
+    t.decimal  "funds",          default: 0.0
+    t.string   "funds_details"
+    t.string   "unit"
+    t.integer  "frequency",      default: 0
   end
 
   add_index "tasks", ["client_id"], name: "index_tasks_on_client_id", using: :btree

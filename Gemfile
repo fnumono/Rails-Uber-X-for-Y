@@ -50,6 +50,7 @@ group :production do
 end
 
 ########################################
+gem 'devise', '~> 3.2'
 gem 'devise_token_auth' , github: 'lynndylanhurley/devise_token_auth'
 gem 'pg'
 gem 'omniauth-facebook'
