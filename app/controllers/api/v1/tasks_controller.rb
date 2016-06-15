@@ -78,7 +78,7 @@ class Api::V1::TasksController < Api::V1::BaseController
       end        
       render json: task, status: :created
     else
-      render json: {errors: task.errors}, status: 401
+      render json: {alert: task.errors.full_messages.first}, status: 401
     end
   end
 
@@ -98,7 +98,7 @@ class Api::V1::TasksController < Api::V1::BaseController
       end  
       render json: @task
     else
-      render json: {errors: @task.errors.messages}, status: 403
+      render json: {alert: @task.errors.full_messages.first}, status: 403
     end
   end
 
@@ -205,8 +205,9 @@ class Api::V1::TasksController < Api::V1::BaseController
     end
 
     def update_task_params      
-      params.require(:task).permit(:title, :datetime, :address,  :addrlat, :addrlng, :contact, :type_id, \
-                  :details, :escrowable, :zoom_office_id, :city, task_uploads_attributes:[:id, :upload])      
+      params.require(:task).permit(:title, :datetime, :address,  :addrlat, :addrlng, :contact, :type_id,
+                  :details, :escrowable, :zoom_office_id, :city, :frequency, :unit, :funds, :funds_details, 
+                  :pick_up_address, :pick_up_addrlat, :pick_up_addrlng, :pick_up_unit, :item)      
     end
 
     def complete_task_params
