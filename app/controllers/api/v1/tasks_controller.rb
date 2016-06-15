@@ -23,10 +23,12 @@ class Api::V1::TasksController < Api::V1::BaseController
 
   def index_mytasks
     params[:offset] = 0 if params[:offset].blank?
+    tasks = current_agent.tasks
+    tasks = tasks.where(status: params[:status]) if params[:status].present?
     if params[:limit].blank?
-      tasks = current_agent.tasks.order(status: :desc, datetime: :desc)
+      tasks = tasks.order(status: :desc, datetime: :desc)
     else 
-      tasks = current_agent.tasks.order(status: :desc, datetime: :desc).limit(params[:limit]).offset(params[:offset])
+      tasks = tasks.order(status: :desc, datetime: :desc).limit(params[:limit]).offset(params[:offset])
       moredata = !current_agent.tasks.order(status: :desc, datetime: :desc).limit(1).offset(params[:offset].to_i+params[:limit].to_i).blank?
     end
     render json: {tasks: tasks, moredata: moredata}
@@ -193,8 +195,9 @@ class Api::V1::TasksController < Api::V1::BaseController
     end
 
     def task_params      
-      params.require(:task).permit(:title, :datetime, :address, :addrlat, :addrlng, :contact, :type_id, \
-                  :details, :escrowable, :zoom_office_id, :city, :frequency, :unit, :funds, :funds_details)      
+      params.require(:task).permit(:title, :datetime, :address, :addrlat, :addrlng, :contact, :type_id,
+                  :details, :escrowable, :zoom_office_id, :city, :frequency, :unit, :funds, :funds_details, 
+                  :pick_up_address, :pick_up_addrlat, :pick_up_addrlng, :pick_up_unit, :item)      
     end
 
     def task_uploads_params
