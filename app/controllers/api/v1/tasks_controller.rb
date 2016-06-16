@@ -1,6 +1,6 @@
 #Base controller which inherited by every api controller
 class Api::V1::TasksController < Api::V1::BaseController  
-  before_action :authenticate_agent! , only: [:index_mytasks, :index_mytasks_calendar, :upload]
+  before_action :authenticate_agent! , only: [:index_mytasks, :index_mytasks_calendar, :upload, :summary]
   before_action :authenticate_client!, only: [:create, :destroy, :update]
   before_action :authenticate_provider!, only: [:accept, :complete]
   before_action :find_mytask!, only: [:destroy, :upload, :update, :complete]
@@ -26,12 +26,18 @@ class Api::V1::TasksController < Api::V1::BaseController
     tasks = current_agent.tasks
     tasks = tasks.where(status: params[:status]) if params[:status].present?
     if params[:limit].blank?
-      tasks = tasks.order(status: :desc, datetime: :desc)
+      res = tasks.order(status: :desc, datetime: :desc)
     else 
-      tasks = tasks.order(status: :desc, datetime: :desc).limit(params[:limit]).offset(params[:offset])
-      moredata = !current_agent.tasks.order(status: :desc, datetime: :desc).limit(1).offset(params[:offset].to_i+params[:limit].to_i).blank?
+      res = tasks.order(status: :desc, datetime: :desc).limit(params[:limit]).offset(params[:offset])
+      moredata = !tasks.order(status: :desc, datetime: :desc).limit(1).offset(params[:offset].to_i+params[:limit].to_i).blank?
     end
-    render json: {tasks: tasks, moredata: moredata}
+    render json: {tasks: res, moredata: moredata}
+  end
+
+  def summary
+    count = current_agent.tasks.group(:status).count
+    count[:total] = current_agent.tasks.count
+    render json: count
   end
 
   

@@ -27,6 +27,7 @@ Rails.application.routes.draw do
         get 'zoomoffices' => 'zoom_offices#index'
         get 'tasks/mytasks' => 'tasks#index_mytasks'
         get 'tasks/mytaskscalendar' => 'tasks#index_mytasks_calendar'
+        get 'tasks/summary' => 'tasks#summary'
         post 'tasks/:id/upload' => 'tasks#upload'
         put 'tasks/:id/accept' => 'tasks#accept'
         put 'tasks/:id/complete' => 'tasks#complete'
