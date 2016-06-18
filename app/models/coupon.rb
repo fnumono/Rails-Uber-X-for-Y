@@ -11,7 +11,7 @@ class Coupon < ActiveRecord::Base
 
   def apply_discount(amount)
     discount = amount * (self.discount_percent * 0.01)
-    (amount - discount.to_i)
+    (amount - discount)
   end
 
   def discount_percent_human
