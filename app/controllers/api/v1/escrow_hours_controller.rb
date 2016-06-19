@@ -107,6 +107,8 @@ class Api::V1::EscrowHoursController < Api::V1::BaseController
         text: "Payment amount: $" + params[:otherPayment].to_s)  
     end
 
+    current_client.payments.create(purchase_hour: params[:purchaseHour], purchase_escrow: params[:purchaseEscrow])
+
 
     render json: { charge: @charge, purchaseHour: params[:purchaseHour], purchaseEscrow: params[:purchaseEscrow] }
 

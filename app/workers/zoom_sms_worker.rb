@@ -15,21 +15,21 @@ class ZoomSmsWorker
         end
 
         if content_type == 'created'
-          content = "Job Notification \"" + task.title + \
+          content = "Job Notification \"" + task.try(:title).to_s + \
                     "\", Datetime: " + task.datetime.to_s + \
                     ", Type: " + task.type.name + \
                     ", City: " + task.city.to_s + \
                     ". Click " + Settings.angular_url + "/pages/jobalert?id=" + \
                      task_id.to_s + "  to accept job" 
         elsif content_type == 'updated'
-          content = "Job changed \"" + task.title + \
+          content = "Job changed \"" + task.try(:title).to_s + \
                     "\", Datetime: " + task.datetime.to_s + \
                     ", Type: " + task.type.name + \
                     ", City: " + task.city.to_s + \
                     ". Click " + Settings.angular_url + "/provider/edit_job?id="  + \
                      task_id.to_s + "  to check the updated job" 
         elsif content_type == 'awarded'
-          content = "Congratulations!  Job awarded \"" + task.title + \
+          content = "Congratulations!  Job awarded \"" + task.try(:title).to_s + \
                     "\", Datetime: " + task.datetime.to_s + \
                     ", Type: " + task.type.name + \
                     ", Location: " + task.address + \

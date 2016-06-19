@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  client_id: 
+  purchase_hour: 1.5
+  purchase_escrow: 1.5
+
+two:
+  client_id: 
+  purchase_hour: 1.5
+  purchase_escrow: 1.5

@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:account_update) << :fname << :lname << :address1 << :address2 \
+    devise_parameter_sanitizer.for(:account_update) << :email << :fname << :lname << :address1 << :address2 \
       << :city << :state	<< :zip << :phone1 << :phone2 << :photo << :proofinsurance << :driverlicense \
       << :addrlat << :addrlng << :zoom_office_id
   end

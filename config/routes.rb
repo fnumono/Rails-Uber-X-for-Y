@@ -32,7 +32,8 @@ Rails.application.routes.draw do
         put 'tasks/:id/accept' => 'tasks#accept'
         put 'tasks/:id/complete' => 'tasks#complete'
         post 'tasks/upload_files' => 'tasks#upload_files'
-        resources :tasks        
+        resources :tasks
+        resources :payments, only: :index        
         get 'escrowhours' => 'escrow_hours#show'
         get 'escrowhours/fee' => 'escrow_hours#fee'
         get 'escrowhours/coupon_check' => 'escrow_hours#coupon_check'

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160615042345) do
+ActiveRecord::Schema.define(version: 20160619075250) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -141,6 +141,16 @@ ActiveRecord::Schema.define(version: 20160615042345) do
   end
 
   add_index "notifications", ["client_id"], name: "index_notifications_on_client_id", using: :btree
+
+  create_table "payments", force: :cascade do |t|
+    t.integer  "client_id"
+    t.float    "purchase_hour",   default: 0.0
+    t.float    "purchase_escrow", default: 0.0
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "payments", ["client_id"], name: "index_payments_on_client_id", using: :btree
 
   create_table "providers", force: :cascade do |t|
     t.string   "provider",                    default: "email", null: false
@@ -290,6 +300,7 @@ ActiveRecord::Schema.define(version: 20160615042345) do
   add_foreign_key "clients", "zoom_offices"
   add_foreign_key "escrow_hours", "clients"
   add_foreign_key "notifications", "clients"
+  add_foreign_key "payments", "clients"
   add_foreign_key "providers", "zoom_offices"
   add_foreign_key "settings", "providers"
   add_foreign_key "settings_types", "settings"
