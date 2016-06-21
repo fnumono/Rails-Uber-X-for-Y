@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160619075250) do
+ActiveRecord::Schema.define(version: 20160621071843) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -262,7 +262,7 @@ ActiveRecord::Schema.define(version: 20160619075250) do
     t.datetime "updated_at",                       null: false
     t.integer  "zoom_office_id"
     t.string   "city"
-    t.decimal  "funds",           default: 0.0
+    t.float    "funds",           default: 0.0
     t.string   "funds_details"
     t.string   "unit"
     t.integer  "frequency",       default: 0

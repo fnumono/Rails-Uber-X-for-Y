@@ -1,6 +1,9 @@
 host_url: http://localhost:3000
-angular_url: http://lvh.me:3011
+angular_url: http://localhost:3012
 
 facebook:
  key: 1724095974486718
  secret: 0313f4e1a4cb8e894a741f2f888d0be2
+
+stripe_publish_key: pk_test_YH06zNfVEQqzGET9dTJaAWcZ
+stripe_secret_key: sk_test_HfZ1fWSjJbhVOJxxajBnbgwI 
