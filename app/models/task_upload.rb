@@ -21,11 +21,17 @@ class TaskUpload < ActiveRecord::Base
   end
 
   def uploadUrl  
-  	Settings.host_url + upload.url if !upload.url.nil?
+    if !upload.url.nil?
+      url = upload.url
+      url = Settings.host_url + url if url[0..3] != 'http'
+    end
   end  
 
   def uploadThumbUrl  
-    Settings.host_url + upload.url(:thumb) if !upload.url.nil?
+    if !upload.url.nil?
+      url = upload.url(:thumb)
+      url = Settings.host_url + url if url[0..3] != 'http'
+    end
   end
 
 

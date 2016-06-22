@@ -32,19 +32,31 @@ class Provider < ActiveRecord::Base
   end
 
   def photoUrl
-  	Settings.host_url + photo.url(:medium) if !photo.url.nil?
+    if !photo.url.nil?
+      url = photo.url(:medium) 
+      url = Settings.host_url + url if url[0..3] != 'http'
+    end
   end
 
   def photoThumbUrl
-    Settings.host_url + photo.url(:thumb) if !photo.url.nil?
+    if !photo.url.nil?
+      url = photo.url(:thumb) 
+      url = Settings.host_url + url if url[0..3] != 'http'
+    end
   end
 
   def driverUrl
-    Settings.host_url + driverlicense.url(:thumb) if !driverlicense.url.nil?
+    if !driverlicense.url.nil?
+      url = driverlicense.url(:thumb) 
+      url = Settings.host_url + url if url[0..3] != 'http'
+    end
   end
 
   def proofUrl
-    Settings.host_url + proofinsurance.url(:thumb) if !proofinsurance.url.nil?
+    if !proofinsurance.url.nil?
+      url = proofinsurance.url(:thumb) 
+      url = Settings.host_url + url if url[0..3] != 'http'
+    end
   end
 
   private

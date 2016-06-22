@@ -41,11 +41,17 @@ class Client < ActiveRecord::Base
   end
 
   def photoUrl  
-  	Settings.host_url + photo.url(:medium) if !photo.url.nil?
+    if !photo.url.nil?
+    	url = photo.url(:medium) 
+      url = Settings.host_url + url if url[0..3] != 'http'
+    end
   end  
 
   def photoThumbUrl  
-    Settings.host_url + photo.url(:thumb) if !photo.url.nil?
+    if !photo.url.nil?
+      url = photo.url(:thumb) 
+      url = Settings.host_url + url if url[0..3] != 'http'
+    end
   end 
 
   private
