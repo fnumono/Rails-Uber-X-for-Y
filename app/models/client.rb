@@ -44,6 +44,7 @@ class Client < ActiveRecord::Base
     if !photo.url.nil?
     	url = photo.url(:medium) 
       url = Settings.host_url + url if url[0..3] != 'http'
+      url
     end
   end  
 
@@ -51,6 +52,7 @@ class Client < ActiveRecord::Base
     if !photo.url.nil?
       url = photo.url(:thumb) 
       url = Settings.host_url + url if url[0..3] != 'http'
+      url
     end
   end 
 

@@ -35,6 +35,7 @@ class Provider < ActiveRecord::Base
     if !photo.url.nil?
       url = photo.url(:medium) 
       url = Settings.host_url + url if url[0..3] != 'http'
+      url
     end
   end
 
@@ -42,6 +43,7 @@ class Provider < ActiveRecord::Base
     if !photo.url.nil?
       url = photo.url(:thumb) 
       url = Settings.host_url + url if url[0..3] != 'http'
+      url
     end
   end
 
@@ -49,6 +51,7 @@ class Provider < ActiveRecord::Base
     if !driverlicense.url.nil?
       url = driverlicense.url(:thumb) 
       url = Settings.host_url + url if url[0..3] != 'http'
+      url
     end
   end
 
@@ -56,6 +59,7 @@ class Provider < ActiveRecord::Base
     if !proofinsurance.url.nil?
       url = proofinsurance.url(:thumb) 
       url = Settings.host_url + url if url[0..3] != 'http'
+      url
     end
   end
 

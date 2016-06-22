@@ -24,6 +24,7 @@ class TaskUpload < ActiveRecord::Base
     if !upload.url.nil?
       url = upload.url
       url = Settings.host_url + url if url[0..3] != 'http'
+      url
     end
   end  
 
@@ -31,6 +32,7 @@ class TaskUpload < ActiveRecord::Base
     if !upload.url.nil?
       url = upload.url(:thumb)
       url = Settings.host_url + url if url[0..3] != 'http'
+      url
     end
   end
 
