@@ -11,6 +11,8 @@ class Task < ActiveRecord::Base
   before_update :update_client_escrow_hour
   after_update :send_complete_notification_provider_client
 
+  validates_presence_of :type, :zoom_office, :datetime, :frequency, :address, :addrlat, :addrlng
+  validates_presence_of :pick_up_address, :pick_up_addrlat, :pick_up_addrlng, if: "type.try(:name) == 'Delivery'"
 
   def attributes
   	a = super
