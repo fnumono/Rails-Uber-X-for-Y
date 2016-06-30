@@ -1,5 +1,5 @@
 ActiveAdmin.register Task do
-
+  config.sort_order = 'datetime_desc'
 	menu priority: 1, label: 'Errands'
 
 # See permitted parameters documentation:
