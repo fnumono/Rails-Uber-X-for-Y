@@ -94,14 +94,6 @@ class Api::V1::TasksController < Api::V1::BaseController
     end
 
     if @task.update(update_task_params)
-      if (@task.status == 'open') && (!@task.provider.nil?)
-        if @task.provider.setting.sms
-          ZoomSmsWorker.perform_in(2.seconds, @task.id, @task.provider_id, 'updated')
-        end
-        if @task.provider.setting.email
-          ZoomMailWorker.perform_in(2.seconds, @task.id, @task.provider_id, 'updated')
-        end  
-      end  
       render json: @task
     else
       render json: {alert: @task.errors.full_messages.first}, status: 403
@@ -149,12 +141,6 @@ class Api::V1::TasksController < Api::V1::BaseController
 
       @task.provider = current_provider
       if @task.save
-        if current_provider.setting.sms
-          ZoomSmsWorker.perform_in(2.seconds, @task.id, current_provider.id, 'awarded')
-        end
-        if current_provider.setting.email
-          ZoomMailWorker.perform_in(2.seconds, @task.id, current_provider.id, 'awarded')
-        end 
         render json: @task
       else
         render json: {errors: 'Sorry, the task is invalid'}, status: 500
@@ -176,7 +162,6 @@ class Api::V1::TasksController < Api::V1::BaseController
     
     begin        
       @task.update!(complete_task_params)
-      # ZoomMailWorker.perform_in(2.seconds, @task.id, 0, 'closed')
       render json: @task
     rescue
       render json: {errors: "The task can't be completed."}, status: 403

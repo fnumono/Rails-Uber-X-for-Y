@@ -1,0 +1,4 @@
+<h1>Purchased hours are not enough</h1>
+
+<p>Dear <%= @client.fname %> <%= @client.lname %>, <br/></p>
+<p>Purchased hours are below <%= @client.client_setting.try(:hours) %>. <br/></p>

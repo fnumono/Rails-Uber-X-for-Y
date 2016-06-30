@@ -1,0 +1,4 @@
+<h1>Purchased funds are not enough</h1>
+
+<p>Dear <%= @client.fname %> <%= @client.lname %>, <br/></p>
+<p>Purchased funds are below $<%= @client.client_setting.try(:funds) %>. <br/></p>

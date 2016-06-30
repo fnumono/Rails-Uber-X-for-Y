@@ -1,0 +1,4 @@
+Purchased hours are not enough
+
+Dear <%= @client.fname %> <%= @client.lname %>,
+Purchased hours are below <%= @client.client_setting.try(:hours) %>.

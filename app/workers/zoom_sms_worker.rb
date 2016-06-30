@@ -26,14 +26,14 @@ class ZoomSmsWorker
                     "\", Datetime: " + task.datetime.to_s + \
                     ", Type: " + task.type.name + \
                     ", City: " + task.city.to_s + \
-                    ". Click " + Settings.angular_url + "/provider/edit_job?id="  + \
+                    ". Click " + Settings.angular_url + "/provider/editjob?id="  + \
                      task_id.to_s + "  to check the updated job" 
         elsif content_type == 'awarded'
           content = "Congratulations!  Job awarded \"" + task.try(:title).to_s + \
                     "\", Datetime: " + task.datetime.to_s + \
                     ", Type: " + task.type.name + \
                     ", Location: " + task.address + \
-                    ". Click " + Settings.angular_url + "/provider/edit_job?id="  + \
+                    ". Click " + Settings.angular_url + "/provider/editjob?id="  + \
                      task_id.to_s + "  to check the updated job"              
         end              
           

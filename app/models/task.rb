@@ -7,9 +7,9 @@ class Task < ActiveRecord::Base
 
   accepts_nested_attributes_for :task_uploads, allow_destroy: true
 
-  after_create :send_job_alert_sms
+  after_create :send_job_alert
   before_update :update_client_escrow_hour
-  after_update :send_complete_notification_provider_client
+  after_update :send_notifications
 
   validates_presence_of :type, :zoom_office, :datetime, :frequency, :address, :addrlat, :addrlng
   validates_presence_of :pick_up_address, :pick_up_addrlat, :pick_up_addrlng, if: "type.try(:name) == 'Delivery'"
@@ -24,24 +24,40 @@ class Task < ActiveRecord::Base
   end
 
   protected
-    def send_complete_notification_provider_client
-      if (self.status == 'close')
-        ZoomMailWorker.perform_in(2.seconds, self.id, 0, 'closed')
-        self.client.notifications.create(notify_type: Settings.notify_errand, name: 'Errand Completed', \
-            text: 'Errand  ' + self.try(:title).to_s + ' has been completed. Hours used: ' + self.usedHour.to_s + \
-            ', Escrow used: ' + self.usedEscrow.to_s)
-      end 
+    def send_notifications
+      if status_changed?
+        if self.status == 'close'
+          ZoomNotificationMailer.delay_for(5.seconds).close_to_provider(self.id) if provider.setting.try(:email).present?
+
+          ZoomSmsSender.delay_for(5.seconds).close_to_client(self.id) if client.client_setting.try(:status_update_sms).present?
+          ZoomNotificationMailer.delay_for(5.seconds).close_to_client(self.id) if client.client_setting.try(:status_update_email).present?
+          self.client.notifications.create(notify_type: Settings.notify_errand, name: 'Errand Completed', \
+              text: 'Errand  ' + self.try(:title).to_s + ' has been completed. Hours used: ' + self.usedHour.to_s + \
+              ', Escrow used: ' + self.usedEscrow.to_s)
+        else
+          ZoomSmsSender.delay_for(5.seconds).status_update_to_client(self.id) if client.client_setting.try(:status_update_sms).present?
+          ZoomNotificationMailer.delay_for(5.seconds).status_update_to_client(self.id) if client.client_setting.try(:status_update_email).present?
+        end 
+      elsif provider_id_changed?        
+        ZoomSmsSender.delay_for(5.seconds).job_awarded_to_provider(self.id, self.provider_id) if provider.setting.try(:sms).present?
+        ZoomNotificationMailer.delay_for(5.seconds).job_awarded_to_provider(self.id, self.provider_id) if provider.setting.try(:email).present?
+
+        ZoomSmsSender.delay_for(5.seconds).provider_update_to_client(self.id) if client.client_setting.try(:provider_update_sms).present?
+        ZoomNotificationMailer.delay_for(5.seconds).provider_update_to_client(self.id) if client.client_setting.try(:provider_update_email).present?
+      else 
+        if self.status == 'open' && provider.present?
+          ZoomSmsSender.delay_for(5.seconds).job_updated_to_provider(self.id, self.provider_id) if provider.setting.try(:sms).present?
+          ZoomNotificationMailer.delay_for(5.seconds).job_updated_to_provider(self.id, self.provider_id) if provider.setting.try(:email).present?
+        end  
+      end
+ 
     end
 
-    def send_job_alert_sms      
+    def send_job_alert      
       providers = select_nearest_sametype_providers(5) 
       providers.find_each do |provider| 
-        if provider.setting.sms
-          ZoomSmsWorker.perform_in(2.seconds, self.id, provider.id, 'created') 
-        end   
-        if provider.setting.email
-          ZoomMailWorker.perform_in(2.seconds, self.id, provider.id, 'created') 
-        end
+        ZoomSmsSender.delay_for(5.seconds).job_alert_to_provider(self.id, provider.id) if provider.setting.try(:sms).present?
+        ZoomNotificationMailer.delay_for(5.seconds).job_alert_to_provider(self.id, provider.id) if provider.setting.try(:email).present?
       end 
 
       self.client.notifications.create(notify_type: Settings.notify_errand, name: 'New Errand Posted', \

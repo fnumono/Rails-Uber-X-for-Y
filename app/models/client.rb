@@ -4,10 +4,11 @@ class Client < ActiveRecord::Base
   belongs_to :zoom_office
   has_many :notifications, dependent: :destroy
   has_many :payments, dependent: :destroy
+  has_one :client_setting, dependent: :destroy
 
   accepts_nested_attributes_for :escrow_hour, allow_destroy: true
 
-  after_create :new_escrow_hour_notification
+  after_create :build_childs
   before_destroy :release_task
 
   # Include default devise modules.
@@ -26,10 +27,11 @@ class Client < ActiveRecord::Base
             text: 'Your account has been created successfully.')
   end
 
-  def new_escrow_hour_notification
+  def build_childs
     EscrowHour.create(client_id: id)
     self.notifications.create(notify_type: Settings.notify_user, name: 'Thank you.', \
             text: 'Confirmation email has been sent to ' + self.email + '.')
+    self.create_client_setting
   end
   
   def attributes

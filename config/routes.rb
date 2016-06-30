@@ -39,6 +39,7 @@ Rails.application.routes.draw do
         get 'escrowhours/coupon_check' => 'escrow_hours#coupon_check'
         post 'escrowhours/charge' => 'escrow_hours#charge'
         get 'my_notification' => 'notifications#my_notification'
+        resource :client_setting, only: [:show, :update]
       end
 
       get 'all_types' => 'base#all_job_types'

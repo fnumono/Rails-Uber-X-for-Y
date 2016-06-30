@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  client_id: 
+  status_update_email: false
+  status_update_sms: false
+  provider_update_email: false
+  provider_update_sms: false
+  hours: 1
+  hours_email: false
+  hours_sms: false
+  funds: 1.5
+  funds_email: false
+  funds_sms: false
+
+two:
+  client_id: 
+  status_update_email: false
+  status_update_sms: false
+  provider_update_email: false
+  provider_update_sms: false
+  hours: 1
+  hours_email: false
+  hours_sms: false
+  funds: 1.5
+  funds_email: false
+  funds_sms: false

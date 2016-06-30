@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160621071843) do
+ActiveRecord::Schema.define(version: 20160630114053) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,6 +58,24 @@ ActiveRecord::Schema.define(version: 20160621071843) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "client_settings", force: :cascade do |t|
+    t.integer  "client_id"
+    t.boolean  "status_update_email",   default: true
+    t.boolean  "status_update_sms",     default: true
+    t.boolean  "provider_update_email", default: true
+    t.boolean  "provider_update_sms",   default: true
+    t.integer  "hours",                 default: 1
+    t.boolean  "hours_email",           default: true
+    t.boolean  "hours_sms",             default: true
+    t.float    "funds",                 default: 0.0
+    t.boolean  "funds_email",           default: true
+    t.boolean  "funds_sms",             default: true
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
+
+  add_index "client_settings", ["client_id"], name: "index_client_settings_on_client_id", using: :btree
 
   create_table "clients", force: :cascade do |t|
     t.string   "provider",               default: "email", null: false
@@ -297,6 +315,7 @@ ActiveRecord::Schema.define(version: 20160621071843) do
   end
 
   add_foreign_key "admins", "zoom_offices"
+  add_foreign_key "client_settings", "clients"
   add_foreign_key "clients", "zoom_offices"
   add_foreign_key "escrow_hours", "clients"
   add_foreign_key "notifications", "clients"
