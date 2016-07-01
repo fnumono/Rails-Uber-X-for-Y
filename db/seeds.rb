@@ -17,14 +17,11 @@ Type.create!(name: 'Pets', comment: 'Care pets')
 
 la = ZoomOffice.create!(longName: 'Los Angeles', shortName: 'Los Angeles')
 sd = ZoomOffice.create!(longName: 'San Diego', shortName: 'San Diego')
-ny = ZoomOffice.create!(longName: 'New York', shortName: 'NY')
 sf = ZoomOffice.create!(longName: 'San Francisco', shortName: 'San Francisco')
 
 Admin.create!(email: 'superadmin@zoomerrands.com', password: '12345678', password_confirmation: '12345678')
 Admin.create!(email: 'la.admin@zoomerrands.com', password: '12345678', password_confirmation: '12345678', zoom_office: la)
 Admin.create!(email: 'sd.admin@zoomerrands.com', password: '12345678', password_confirmation: '12345678', zoom_office: sd)
-Admin.create!(email: 'ny.admin@zoomerrands.com', password: '12345678', password_confirmation: '12345678', zoom_office: ny)
-
 
 client = Client.new(email: 'client@zoomerrands.com', password: '12345678', zoom_office: la)
 client.skip_confirmation!
@@ -39,4 +36,4 @@ provider.save!
 Coupon.create!(code: '12345', discount_percent: '10', description: 'Save 10 percent')
 Coupon.create!(code: 'ABCDE', discount_percent: '30', description: 'Save 30 percent')    
 
-Fee.create!(percent: 5, cent: 150)
+Fee.create!(percent: 5, cent: 0)
