@@ -67,3 +67,4 @@ gem 'stripe'
 gem 'rubocop', require: false
 gem 'airbrake', '~> 5.1'
 gem 'aws-sdk', '< 2.0'
+gem 'unicorn-rails'
