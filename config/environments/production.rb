@@ -65,13 +65,13 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # ActionMailer Config
-  config.action_mailer.default_url_options = { :host => 'http://app.zoomerrands.com:3000' }
+  config.action_mailer.default_url_options = { :host => Settings.host_url }
   config.action_mailer.delivery_method = :smtp
   #############  config mailer for gmail  ########################
   config.action_mailer.smtp_settings = {
       address: "smtp.gmail.com",
       port: 587,
-      domain: "app.zoomerrands.com" ,
+      domain: "zoomerrands.com" ,
       authentication: "plain",
       enable_starttls_auto: true,
       user_name: "dev@zoomerrands.com",#Rails.application.secrets.email_provider_username,

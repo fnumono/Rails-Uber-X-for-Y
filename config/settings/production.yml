@@ -1,7 +1,3 @@
-# host_url: http://zoomerrands.herokuapp.com
-host_url: http://app.zoomerrands.com:3000
-angular_url: http://provider.zoomerrands.com
-
 facebook:
  key: 531598823665601
  secret: 786b969f7e847d2a2826f49c65344aa2

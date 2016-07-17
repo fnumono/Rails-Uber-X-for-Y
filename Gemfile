@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.2.1'
+ruby '2.2.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.2'
@@ -13,7 +13,7 @@ gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.1.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -51,7 +51,7 @@ end
 
 ########################################
 gem 'devise', '~> 3.2'
-gem 'devise_token_auth' , github: 'lynndylanhurley/devise_token_auth'
+gem 'devise_token_auth'
 gem 'pg'
 gem 'omniauth-facebook'
 gem 'config'
@@ -67,4 +67,4 @@ gem 'stripe'
 gem 'rubocop', require: false
 gem 'airbrake', '~> 5.1'
 gem 'aws-sdk', '< 2.0'
-gem 'unicorn-rails'
+gem 'unicorn'
