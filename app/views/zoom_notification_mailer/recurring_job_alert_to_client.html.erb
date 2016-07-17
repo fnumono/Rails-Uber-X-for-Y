@@ -1,0 +1,9 @@
+<h1>Recurring Job Alert!</h1>
+
+<p>Dear <%= @client.fname %> <%= @client.lname %>, recurring task was created.<br/></p>
+<p>Datetime: <%= @task.datetime %><br/> </p>
+<p>Service Category: <%= @task.type.name %> <br/> </p>
+<p>City: <%= @task.city %><br/> </p>
+<p>Require purchase: <%= @task.escrowable %><br/> </p>
+<p>Job Notes: <%= @task.details %><br/> </p>
+

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160630114053) do
+ActiveRecord::Schema.define(version: 20160717184730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -273,22 +273,23 @@ ActiveRecord::Schema.define(version: 20160630114053) do
     t.integer  "client_id"
     t.integer  "provider_id"
     t.integer  "type_id"
-    t.float    "usedHour",        default: 0.0
-    t.float    "usedEscrow",      default: 0.0
-    t.string   "status",          default: "open"
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.float    "usedHour",          default: 0.0
+    t.float    "usedEscrow",        default: 0.0
+    t.string   "status",            default: "open"
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
     t.integer  "zoom_office_id"
     t.string   "city"
-    t.float    "funds",           default: 0.0
+    t.float    "funds",             default: 0.0
     t.string   "funds_details"
     t.string   "unit"
-    t.integer  "frequency",       default: 0
+    t.integer  "frequency",         default: 0
     t.string   "pick_up_address"
     t.float    "pick_up_addrlat"
     t.float    "pick_up_addrlng"
     t.string   "pick_up_unit"
     t.string   "item"
+    t.integer  "recurring_task_id"
   end
 
   add_index "tasks", ["client_id"], name: "index_tasks_on_client_id", using: :btree

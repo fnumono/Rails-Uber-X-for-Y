@@ -22,6 +22,13 @@ class ZoomNotificationMailer < ApplicationMailer
     mail to: @provider.email, subject: 'New Job Alert'
   end
 
+  def recurring_job_alert_to_client(task_id)
+    @task = Task.find_by(id: task_id)
+    @client = @task.client  
+
+    mail to: @client.email, subject: 'Recurring Job Alert'
+  end
+
   def job_updated_to_provider(task_id, provider_id)
 		@task = Task.find_by(id: task_id)
   	@provider = Provider.find_by(id: provider_id) 

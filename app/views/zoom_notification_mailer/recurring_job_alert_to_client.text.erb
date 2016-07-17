@@ -1,0 +1,8 @@
+Recurring Job Alert!
+
+Dear <%= @client.fname %> <%= @client.lname %>, recurring task was created.
+Datetime: <%= @task.datetime %> 
+Service Category: <%= @task.type.name %>  
+City: <%= @task.city %> 
+Require purchase: <%= @task.escrowable %> 
+Job Notes: <%= @task.details %> 
