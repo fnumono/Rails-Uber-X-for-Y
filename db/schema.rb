@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160717184730) do
+ActiveRecord::Schema.define(version: 20160726181406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -224,6 +224,12 @@ ActiveRecord::Schema.define(version: 20160717184730) do
   add_index "providers", ["reset_password_token"], name: "index_providers_on_reset_password_token", unique: true, using: :btree
   add_index "providers", ["uid", "provider"], name: "index_providers_on_uid_and_provider", unique: true, using: :btree
   add_index "providers", ["zoom_office_id"], name: "index_providers_on_zoom_office_id", using: :btree
+
+  create_table "server_settings", force: :cascade do |t|
+    t.float    "price_per_hour"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
 
   create_table "settings", force: :cascade do |t|
     t.integer  "provider_id"

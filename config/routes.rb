@@ -43,6 +43,7 @@ Rails.application.routes.draw do
       end
 
       get 'all_types' => 'base#all_job_types'
+      get 'server_setting' => 'server_settings#show'
     end
   end
 
