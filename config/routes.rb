@@ -44,6 +44,7 @@ Rails.application.routes.draw do
 
       get 'all_types' => 'base#all_job_types'
       get 'server_setting' => 'server_settings#show'
+      resources :contacts, only: :create
     end
   end
 
