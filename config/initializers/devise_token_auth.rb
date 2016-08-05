@@ -36,3 +36,43 @@ DeviseTokenAuth.setup do |config|
   # do so by enabling this flag. NOTE: This feature is highly experimental!
   # enable_standard_devise_support = false
 end
+
+DeviseTokenAuth::OmniauthCallbacksController.class_eval do
+  def get_resource_from_auth_hash
+    @resource = resource_class.where(email: auth_hash['info']['email']).first_or_initialize    
+    @resource.uid = auth_hash['info']['email']
+    if @resource.new_record?
+      @oauth_registration = true
+      set_random_password
+    end
+    
+    # sync user info with provider, update/generate auth token
+    assign_provider_attrs(@resource, auth_hash)
+
+    # assign any additional (whitelisted) attributes
+    extra_params = whitelisted_params
+    @resource.assign_attributes(extra_params) if extra_params
+
+    @resource
+  end  
+
+  def omniauth_success
+    get_resource_from_auth_hash
+    create_token_info
+    set_token_on_resource
+    create_auth_params
+
+    if resource_class.devise_modules.include?(:confirmable)
+      # don't send confirmation email!!!
+      @resource.skip_confirmation!
+    end
+
+    sign_in(:user, @resource, store: false, bypass: false)
+
+    @resource.save!
+    yield @resource if block_given?
+
+    render_data_or_redirect('deliverCredentials', @auth_params.as_json, @resource.as_json)
+  end
+end
+
