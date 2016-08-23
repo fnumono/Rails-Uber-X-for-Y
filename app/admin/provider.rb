@@ -18,6 +18,23 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
     end
   end
 
+  after_create do |provider|
+	  Provider.skip_callback("create", :after, :send_on_create_confirmation_instructions)
+
+	  if (provider.persisted?) && (!provider.confirmed?)
+	    provider.confirm
+	    # # give redirect value from params priority
+	    # @redirect_url = params[:confirm_success_url]
+	    # # fall back to default value if provided
+	    # @redirect_url ||= DeviseTokenAuth.default_confirm_success_url
+
+	    # user.send_confirmation_instructions({
+	    #       client_config: params[:config_name],
+	    #       redirect_url: @redirect_url
+	    #     })
+	  end
+	end
+
 	index do
 		selectable_column
 	  column :id

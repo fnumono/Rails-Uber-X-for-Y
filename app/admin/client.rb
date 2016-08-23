@@ -4,7 +4,7 @@ ActiveAdmin.register Client do
 	# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 	#
 	permit_params :fname, :lname, :email, :address1, :address2, :phone1, :phone2, :photo  ,	\
-								:city, :state, :zip, :zoom_office_id
+								:city, :state, :zip, :zoom_office_id, :password
 								# escrow_hour_attributes: [:hoursavail, :hoursused, :escrowavail, :escrowused]
 
 	controller do
@@ -17,6 +17,23 @@ ActiveAdmin.register Client do
       end
     end
   end
+
+  after_create do |client|
+	  Client.skip_callback("create", :after, :send_on_create_confirmation_instructions)
+
+	  if (client.persisted?) && (!client.confirmed?)
+	    client.confirm
+	    # # give redirect value from params priority
+	    # @redirect_url = params[:confirm_success_url]
+	    # # fall back to default value if provided
+	    # @redirect_url ||= DeviseTokenAuth.default_confirm_success_url
+
+	    # user.send_confirmation_instructions({
+	    #       client_config: params[:config_name],
+	    #       redirect_url: @redirect_url
+	    #     })
+	  end
+	end
 
 	index do
 		selectable_column
