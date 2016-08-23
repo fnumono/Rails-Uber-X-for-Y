@@ -4,10 +4,11 @@ ActiveAdmin.register Provider do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :driverlicense, \
-		:proofinsurance,	:phone2, :photo, :city, :state, :zip, :addrlat, :addrlng, :zoom_office_id, setting_attributes:[type_ids:[]]
+		:proofinsurance,	:phone2, :photo, :city, :state, :zip, :addrlat, :addrlng, :zoom_office_id, \
+		:password, setting_attributes:[type_ids:[]]
 
 	controller do
-    def scoped_collection    	
+    def scoped_collection
     	if current_admin.email == 'superadmin@zoomerrands.com'
     		end_of_association_chain
     	else
@@ -15,22 +16,22 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
       	end_of_association_chain.where(zoom_office: office)
       end
     end
-  end	
-	
+  end
+
 	index do
 		selectable_column
-	  column :id 
+	  column :id
 	  column :photo do |provider|
 	  	link_to image_tag(provider.photo.url(:thumb)), provider.photo.url
 	  end
 	  column :email
 	  column :fname
-	  column :lname	
+	  column :lname
 	  column 'ZoomOffice' do |client|
 	  	client.zoom_office.longName if !client.zoom_office.nil?
-	  end  
+	  end
 	  column :address1, sortable: false
-	  column :address2, sortable: false	  
+	  column :address2, sortable: false
 	  column :phone1
 	  column :addrlat
 	  column :addrlng
@@ -63,11 +64,11 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 	  end
 	  column :types do |provider|
 		  	provider.setting.types.map { |type| type.name  }
-		  end 
+		  end
 	  column :active
 
 
-	  actions	
+	  actions
 	end
 
 	filter :zoom_office
@@ -82,18 +83,18 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 
 	show do
     attributes_table do
-      row :id 
+      row :id
 		  row :photo do |provider|
 		  	link_to image_tag(provider.photo.url(:thumb)), provider.photo.url
 		  end
 		  row :email
 		  row :fname
-		  row :lname	
+		  row :lname
 		  row 'ZoomOffice' do |client|
 		  	client.zoom_office.longName if !client.zoom_office.nil?
-		  end  
+		  end
 		  row :address1
-		  row :address2	  
+		  row :address2
 		  row :phone1
 		  row :addrlat
 		  row :addrlng
@@ -123,10 +124,10 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 		  end
 		  row :types do |provider|
 		  	provider.setting.types.map { |type| type.name  }
-		  end 
+		  end
 		  row :created_at
 		  row :updated_at
-		  row :active 
+		  row :active
     end
 
     panel "Provider Errands History" do
@@ -142,29 +143,32 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 				column "Client" do |task|
 					link_to "#{task.client.fname} #{task.client.lname}", admin_client_path(task.client) \
 					if !task.client.nil?
-				end  
-				column 'Contact #', :contact				
+				end
+				column 'Contact #', :contact
 				column 'Type' do |task|
 					task.type.name if !task.type.nil?
 				end
-				column 'Start Address', :address, sortable: false				
+				column 'Start Address', :address, sortable: false
 				column 'Escrow Used', :usedEscrow
 				column 'Hours Used', :usedHour
 				column :status
       end
-    end  
+    end
 
     active_admin_comments
   end
 
 	form do |f|
-	  f.semantic_errors # shows errors on :base	  
-	  
+	  f.semantic_errors # shows errors on :base
+
 	  f.inputs "Provider" do          # builds an input field for every attribute
 	  	f.input :email
+	  	if f.object.new_record?
+	  		f.input :password
+	  	end
 	  	f.input :photo
 	  	f.input :fname
-	  	f.input :lname  	
+	  	f.input :lname
 
 	  	f.input :zoom_office, as: :select, multiple: false, \
 	  					:collection => ZoomOffice.all.map{ |office| [office.longName, office.id] }, :prompt => 'Select one'
@@ -175,7 +179,7 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 	  	f.input :addrlng
 	  	f.input :driverlicense
 	  	f.input :proofinsurance
-	  	f.input :active	 
+	  	f.input :active
 	  	f.has_many :setting, new_record: false do |t|
 		  	t.input :type_ids, :label => "Job Type", as: :select, multiple: true, \
 		  					:collection => Type.all.map{ |type| [type.name, type.id] }, :prompt => 'Select one'
@@ -189,9 +193,9 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 		  #   	# a.input :confidentiality
 		  #   	# a.input :delivery
 		  # 	end
-		  # end	
-	  end	
-	  
+		  # end
+	  end
+
 
 	  f.actions         # adds the 'Submit' and 'Cancel' buttons
 	end

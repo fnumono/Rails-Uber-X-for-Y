@@ -8,7 +8,7 @@ ActiveAdmin.register Client do
 								# escrow_hour_attributes: [:hoursavail, :hoursused, :escrowavail, :escrowused]
 
 	controller do
-    def scoped_collection    	
+    def scoped_collection
     	if current_admin.email == 'superadmin@zoomerrands.com'
     		end_of_association_chain
     	else
@@ -20,20 +20,20 @@ ActiveAdmin.register Client do
 
 	index do
 		selectable_column
-	  column :id 
+	  column :id
 	  column :photo do |client|
 	  	link_to image_tag(client.photo.url(:thumb)), client.photo.url
 	  end
 	  column :email
 	  column :fname
-	  column :lname	  
+	  column :lname
 	  column :address1, sortable: false
 	  column :city
 	  column :state
-	  column :zip	  
+	  column :zip
 	  # column :address2
 	  column :phone1
-	  column :phone2	
+	  column :phone2
 	  column 'HoursAvail' do |client|
 	  	client.escrow_hour.hoursavail
 	  end
@@ -50,7 +50,7 @@ ActiveAdmin.register Client do
 	  	client.zoom_office.longName if !client.zoom_office.nil?
 	  end
 
-	  actions	
+	  actions
 	end
 
 	filter :zoom_office
@@ -67,9 +67,12 @@ ActiveAdmin.register Client do
 
 	form do |f|
 	  f.semantic_errors # shows errors on :base
-	  
+
 	  f.inputs "Client" do          # builds an input field for every attribute
 	  	f.input :email
+	  	if f.object.new_record?
+	  		f.input :password
+	  	end
 	  	f.input :photo
 	  	f.input :fname
 	  	f.input :lname
@@ -90,26 +93,26 @@ ActiveAdmin.register Client do
     #     	a.input :escrowused
     #   	end
     #   end
-	  end	
+	  end
 	  f.actions         # adds the 'Submit' and 'Cancel' buttons
 	end
 
 	show do
 		attributes_table do
-			row :id 
+			row :id
 		  row :photo do |client|
 		  	link_to image_tag(client.photo.url(:thumb)), client.photo.url
 		  end
 		  row :email
 		  row :fname
-		  row :lname	  
+		  row :lname
 		  row :address1
 		  row :city
 		  row :state
-		  row :zip	  
+		  row :zip
 		  # row :address2
 		  row :phone1
-		  row :phone2	
+		  row :phone2
 		  row 'HoursAvail' do |client|
 		  	client.escrow_hour.hoursavail
 		  end
@@ -124,11 +127,11 @@ ActiveAdmin.register Client do
 		  end
 		  row 'ZoomOffice' do |client|
 		  	client.zoom_office.longName if !client.zoom_office.nil?
-		  end 
+		  end
 		  row :created_at
 		  row :updated_at
 		end
-		
+
     panel "Client Errand History" do
       table_for client.tasks.order(datetime: :DESC) do
         column :id
@@ -138,25 +141,25 @@ ActiveAdmin.register Client do
 				column 'Errand Date', :datetime
 				column 'Office' do |task|
 					task.zoom_office.longName if !task.zoom_office.nil?
-				end				
+				end
 				column 'Contact #', :contact
 				column 'Provider' do |task|
 		    	link_to "#{task.provider.fname} #{task.provider.lname}", admin_provider_path(task.provider) \
 		    	if !task.provider.nil?
-		    end  
+		    end
 				column 'Type' do |task|
 					task.type.name if !task.type.nil?
 				end
-				column 'Start Address', :address, sortable: false				
+				column 'Start Address', :address, sortable: false
 				column 'Escrow Used', :usedEscrow
 				column 'Hours Used', :usedHour
 				column :status
 
       end
-    end  
+    end
 
     active_admin_comments
   end
 
-	
+
 end
