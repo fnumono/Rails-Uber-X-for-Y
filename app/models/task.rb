@@ -37,28 +37,28 @@ class Task < ActiveRecord::Base
         else
           ZoomSmsSender.delay_for(5.seconds).status_update_to_client(self.id) if client.client_setting.try(:status_update_sms).present?
           ZoomNotificationMailer.delay_for(5.seconds).status_update_to_client(self.id) if client.client_setting.try(:status_update_email).present?
-        end 
-      elsif provider_id_changed?        
+        end
+      elsif provider_id_changed?
         ZoomSmsSender.delay_for(5.seconds).job_awarded_to_provider(self.id, self.provider_id) if provider.setting.try(:sms).present?
         ZoomNotificationMailer.delay_for(5.seconds).job_awarded_to_provider(self.id, self.provider_id) if provider.setting.try(:email).present?
 
         ZoomSmsSender.delay_for(5.seconds).provider_update_to_client(self.id) if client.client_setting.try(:provider_update_sms).present?
         ZoomNotificationMailer.delay_for(5.seconds).provider_update_to_client(self.id) if client.client_setting.try(:provider_update_email).present?
-      else 
+      else
         if self.status == 'open' && provider.present?
           ZoomSmsSender.delay_for(5.seconds).job_updated_to_provider(self.id, self.provider_id) if provider.setting.try(:sms).present?
           ZoomNotificationMailer.delay_for(5.seconds).job_updated_to_provider(self.id, self.provider_id) if provider.setting.try(:email).present?
-        end  
+        end
       end
- 
+
     end
 
     def send_job_alert
-      providers = select_nearest_sametype_providers(5) 
-      providers.find_each do |provider| 
+      providers = select_nearest_sametype_providers(5)
+      providers.find_each do |provider|
         ZoomSmsSender.delay_for(5.seconds).job_alert_to_provider(self.id, provider.id) if provider.setting.try(:sms).present?
         ZoomNotificationMailer.delay_for(5.seconds).job_alert_to_provider(self.id, provider.id) if provider.setting.try(:email).present?
-      end 
+      end
 
       self.client.notifications.create(notify_type: Settings.notify_errand, name: 'New Errand Posted', \
             text: 'You posted a new errand ' + self.try(:title).to_s + '.')
@@ -73,10 +73,11 @@ class Task < ActiveRecord::Base
                           .where.not(id: busy_provider_ids)\
                           .where('settings_types.type_id = ?', self.type_id)\
                           .where('settings.available = ?', true)\
+                          .where(zoom_office: zoom_office)\
                           .where(active: true)\
                           .select(query,'providers.id').distinct.order("dist").limit(limit)
-      providers 
-    end    
+      providers
+    end
 
     def update_client_escrow_hour
       updated_hours = 0
@@ -88,18 +89,18 @@ class Task < ActiveRecord::Base
         updated_hours = 0 - self.usedHour
         updated_escrow = 0 - self.usedEscrow  if self.escrowable
       elsif (!self.status_changed?) && (self.status == 'close')
-        updated_hours = self.usedHour - self.usedHour_was  
+        updated_hours = self.usedHour - self.usedHour_was
         updated_escrow = self.usedEscrow - self.usedEscrow_was  if self.escrowable
       end
       self.client.escrow_hour.hoursavail -= updated_hours
       self.client.escrow_hour.hoursused += updated_hours
       self.client.escrow_hour.escrowavail -= updated_escrow
-      self.client.escrow_hour.escrowused += updated_escrow 
-      
+      self.client.escrow_hour.escrowused += updated_escrow
+
       if !(self.client.save)
         self.status = self.status_was
         self.usedHour = self.usedHour_was
         self.usedEscrow = self.usedEscrow_was
-      end    
+      end
     end
 end

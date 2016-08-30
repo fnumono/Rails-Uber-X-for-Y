@@ -4,7 +4,7 @@ ActiveAdmin.register Client do
 	# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 	#
 	permit_params :fname, :lname, :email, :address1, :address2, :phone1, :phone2, :photo  ,	\
-								:city, :state, :zip, :zoom_office_id, :password
+								:city, :state, :zip, :zoom_office_id, :password, :banned
 								# escrow_hour_attributes: [:hoursavail, :hoursused, :escrowavail, :escrowused]
 
 	controller do
@@ -66,6 +66,7 @@ ActiveAdmin.register Client do
 	  column 'ZoomOffice' do |client|
 	  	client.zoom_office.longName if !client.zoom_office.nil?
 	  end
+	  column :banned
 
 	  actions
 	end
@@ -80,6 +81,7 @@ ActiveAdmin.register Client do
   filter :city
   filter :state
   filter :zip
+  filter :banned
   filter :created_at
 
 	form do |f|
@@ -102,6 +104,7 @@ ActiveAdmin.register Client do
 		  f.input :zip
 		  # f.input :zoom_office, :label => "Genre", as: :select, multiple: true, :collection => Genre.all.map{ |genre| [genre.name, genre.id] }, :prompt => 'Select one'
 	  	f.input :zoom_office, as: :select, multiple: false, :collection => ZoomOffice.all.map{ |office| [office.longName, office.id] }, :prompt => 'Select one'
+	  	f.input :banned
 	  	# f.inputs  do
 	  	# 	f.has_many :escrow_hour, heading: 'Escrow Hour', new_record: false do |a|
     #     	a.input :hoursavail
@@ -145,6 +148,7 @@ ActiveAdmin.register Client do
 		  row 'ZoomOffice' do |client|
 		  	client.zoom_office.longName if !client.zoom_office.nil?
 		  end
+		  row :banned
 		  row :created_at
 		  row :updated_at
 		end

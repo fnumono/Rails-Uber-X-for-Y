@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160726181406) do
+ActiveRecord::Schema.define(version: 20160830060619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -114,6 +114,7 @@ ActiveRecord::Schema.define(version: 20160726181406) do
     t.string   "city"
     t.string   "zip"
     t.integer  "zoom_office_id"
+    t.boolean  "banned",                 default: false
   end
 
   add_index "clients", ["email"], name: "index_clients_on_email", using: :btree

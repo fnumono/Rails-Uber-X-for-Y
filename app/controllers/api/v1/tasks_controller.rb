@@ -1,11 +1,11 @@
 #Base controller which inherited by every api controller
-class Api::V1::TasksController < Api::V1::BaseController  
+class Api::V1::TasksController < Api::V1::BaseController
   before_action :authenticate_agent! , only: [:index_mytasks, :index_mytasks_calendar, :upload, :summary]
   before_action :authenticate_client!, only: [:create, :destroy, :update]
   before_action :authenticate_provider!, only: [:accept, :complete]
   before_action :find_mytask!, only: [:destroy, :upload, :update, :complete]
   before_action :find_task!, only: [:show, :accept]
- 
+
   # def index
   #   params[:offset] = 0 if params[:offset].blank?
   #   if params[:limit].blank?
@@ -13,11 +13,11 @@ class Api::V1::TasksController < Api::V1::BaseController
   #   else
   #     tasks = Task.order(status: :desc, datetime: :desc).limit(params[:limit]).offset(params[:offset])
   #     moredata = !Task.order(status: :desc, datetime: :desc).limit(1).offset(params[:offset].to_i + params[:limit].to_i).nil?
-  #   end      
+  #   end
   #   render json: {tasks: tasks, moredata: moredata}
   # end
 
-  def show    
+  def show
     render json: @task
   end
 
@@ -27,7 +27,7 @@ class Api::V1::TasksController < Api::V1::BaseController
     tasks = tasks.where(status: params[:status]) if params[:status].present?
     if params[:limit].blank?
       res = tasks.order(status: :desc, datetime: :desc)
-    else 
+    else
       res = tasks.order(status: :desc, datetime: :desc).limit(params[:limit]).offset(params[:offset])
       moredata = !tasks.order(status: :desc, datetime: :desc).limit(1).offset(params[:offset].to_i+params[:limit].to_i).blank?
     end
@@ -40,7 +40,7 @@ class Api::V1::TasksController < Api::V1::BaseController
     render json: count
   end
 
-  
+
   api :GET, 'client/tasks/mytaskscalendar', 'Get client\'s tasks for calendar'
   error :code => 401, :desc => "Unauthorized"
   description "Get client\'s tasks for calendar"
@@ -54,11 +54,16 @@ class Api::V1::TasksController < Api::V1::BaseController
     #   oneday_task[key] = tasks[key]
     #   resp << oneday_task
     # end
-    
+
     render json: {events: tasks}
   end
 
   def create
+    if current_client.banned?
+      render json: {alert: 'Your account was banned. Please contact with Support team\
+         to reactivate your account.'}, status: 403 and return
+    end
+
     if task_params[:datetime].blank?
       render json: {alert: 'Date and Time format is not proper.'}, status: 400 and return
     end
@@ -81,7 +86,7 @@ class Api::V1::TasksController < Api::V1::BaseController
     if task.save
       if task_uploads_params[:task_uploads].present?
         TaskUpload.where(id: task_uploads_params[:task_uploads].values.flatten.map{|v| v[:id]}, task_id: nil).update_all("task_id = #{task.id}")
-      end        
+      end
       render json: task, status: :created
     else
       render json: {alert: task.errors.full_messages.first}, status: 401
@@ -89,6 +94,11 @@ class Api::V1::TasksController < Api::V1::BaseController
   end
 
   def update
+    if current_client.banned?
+      render json: {alert: 'Your account was banned. Please contact with Support team\
+         to reactivate your account.'}, status: 403 and return
+    end
+
     if params[:task][:datetime].blank?
       render json: {alert: 'Date and Time format is not proper.'}, status: 400 and return
     end
@@ -105,9 +115,9 @@ class Api::V1::TasksController < Api::V1::BaseController
     task = @task.destroy
     if task
       render json: {title: task.title}
-    else 
+    else
       render json: {errors: @task.errors.messages}, status: 422
-    end    
+    end
   end
 
   def upload_files
@@ -133,7 +143,7 @@ class Api::V1::TasksController < Api::V1::BaseController
     end
   end
 
-  def accept    
+  def accept
     if @task.provider.nil?
       if !(current_provider.setting.types.exists?(@task.type_id))
         render json: {errors: 'You can\'t accept ' + @task.type.name + ' tasks.' }, status: 403 and return
@@ -147,8 +157,8 @@ class Api::V1::TasksController < Api::V1::BaseController
       end
     elsif @task.provider == current_provider
       render json: {errors: 'You are already awarded to this task. Please check "my jobs" page'}, status: 400
-    else  
-      render json: {errors: 'The task was already accepted by other service provider'}, status: 403  
+    else
+      render json: {errors: 'The task was already accepted by other service provider'}, status: 403
     end
   end
 
@@ -159,8 +169,8 @@ class Api::V1::TasksController < Api::V1::BaseController
 
     params[:usedHour] = params[:usedHour].blank? ? 0 : params[:usedHour].to_f.abs
     params[:usedEscrow] = params[:usedEscrow].blank? ? 0 : params[:usedEscrow].to_f.abs
-    
-    begin        
+
+    begin
       @task.update!(complete_task_params)
       render json: @task
     rescue
@@ -173,7 +183,7 @@ class Api::V1::TasksController < Api::V1::BaseController
       begin
         @task = current_agent.tasks.find(params[:id])
       rescue
-        render json: {errors: 'There is no task you requested'}, status: 404      
+        render json: {errors: 'There is no task you requested'}, status: 404
       end
     end
 
@@ -181,24 +191,24 @@ class Api::V1::TasksController < Api::V1::BaseController
       begin
         @task = Task.find(params[:id])
       rescue
-        render json: {errors: 'There is no task you requested'}, status: 404       
+        render json: {errors: 'There is no task you requested'}, status: 404
       end
     end
 
-    def task_params      
+    def task_params
       params.require(:task).permit(:title, :datetime, :address, :addrlat, :addrlng, :contact, :type_id,
-                  :details, :escrowable, :zoom_office_id, :city, :frequency, :unit, :funds, :funds_details, 
-                  :pick_up_address, :pick_up_addrlat, :pick_up_addrlng, :pick_up_unit, :item)      
+                  :details, :escrowable, :zoom_office_id, :city, :frequency, :unit, :funds, :funds_details,
+                  :pick_up_address, :pick_up_addrlat, :pick_up_addrlng, :pick_up_unit, :item)
     end
 
     def task_uploads_params
       params.require(:task).permit(task_uploads: [normal: [:id], funds: [:id]])
     end
 
-    def update_task_params      
+    def update_task_params
       params.require(:task).permit(:title, :datetime, :address,  :addrlat, :addrlng, :contact, :type_id,
-                  :details, :escrowable, :zoom_office_id, :city, :frequency, :unit, :funds, :funds_details, 
-                  :pick_up_address, :pick_up_addrlat, :pick_up_addrlng, :pick_up_unit, :item)      
+                  :details, :escrowable, :zoom_office_id, :city, :frequency, :unit, :funds, :funds_details,
+                  :pick_up_address, :pick_up_addrlat, :pick_up_addrlng, :pick_up_unit, :item)
     end
 
     def complete_task_params
@@ -209,5 +219,5 @@ class Api::V1::TasksController < Api::V1::BaseController
       params.permit(:upload)
     end
 
-        
+
 end
