@@ -99,6 +99,7 @@ Rails.application.configure do
       :access_key_id => Settings.AWS_ACCESS_KEY_ID,
       :secret_access_key => Settings.AWS_SECRET_ACCESS_KEY
     },
+    :s3_protocol => 'https',
     :url =>':s3_domain_url',
     :path => '/:class/:attachment/:id_partition/:style/:filename'
   }
