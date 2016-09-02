@@ -1,6 +1,6 @@
-Rails.application.routes.draw do 
+Rails.application.routes.draw do
   require 'sidekiq/web'
-  mount Sidekiq::Web, at: '/sidekiq' 
+  mount Sidekiq::Web, at: '/sidekiq'
   apipie
   devise_for :admins, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
@@ -16,7 +16,7 @@ Rails.application.routes.draw do
       #####################################################
       ###   never use this followed routing style .
       ###   use route above
-      # mount_devise_token_auth_for 'Client', at: 'auth'  
+      # mount_devise_token_auth_for 'Client', at: 'auth'
       #####################################################
       scope ':agent' do
         get 'setting' => 'setting#index'
@@ -25,15 +25,17 @@ Rails.application.routes.draw do
         put 'types' => 'types#update'
         get 'alltypes' => 'types#alltypes'
         get 'zoomoffices' => 'zoom_offices#index'
+        get 'tasks/findtasks' => 'tasks#index_findtasks'
         get 'tasks/mytasks' => 'tasks#index_mytasks'
         get 'tasks/mytaskscalendar' => 'tasks#index_mytasks_calendar'
         get 'tasks/summary' => 'tasks#summary'
         post 'tasks/:id/upload' => 'tasks#upload'
         put 'tasks/:id/accept' => 'tasks#accept'
         put 'tasks/:id/complete' => 'tasks#complete'
+        put 'tasks/:id/cancel' => 'tasks#cancel'
         post 'tasks/upload_files' => 'tasks#upload_files'
         resources :tasks
-        resources :payments, only: :index        
+        resources :payments, only: :index
         get 'escrowhours' => 'escrow_hours#show'
         get 'escrowhours/fee' => 'escrow_hours#fee'
         get 'escrowhours/coupon_check' => 'escrow_hours#coupon_check'

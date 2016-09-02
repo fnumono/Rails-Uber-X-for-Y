@@ -39,11 +39,15 @@ class Task < ActiveRecord::Base
           ZoomNotificationMailer.delay_for(5.seconds).status_update_to_client(self.id) if client.client_setting.try(:status_update_email).present?
         end
       elsif provider_id_changed?
-        ZoomSmsSender.delay_for(5.seconds).job_awarded_to_provider(self.id, self.provider_id) if provider.setting.try(:sms).present?
-        ZoomNotificationMailer.delay_for(5.seconds).job_awarded_to_provider(self.id, self.provider_id) if provider.setting.try(:email).present?
+        if provider_id == nil
+          send_job_alert
+        else
+          ZoomSmsSender.delay_for(5.seconds).job_awarded_to_provider(self.id, self.provider_id) if provider.setting.try(:sms).present?
+          ZoomNotificationMailer.delay_for(5.seconds).job_awarded_to_provider(self.id, self.provider_id) if provider.setting.try(:email).present?
 
-        ZoomSmsSender.delay_for(5.seconds).provider_update_to_client(self.id) if client.client_setting.try(:provider_update_sms).present?
-        ZoomNotificationMailer.delay_for(5.seconds).provider_update_to_client(self.id) if client.client_setting.try(:provider_update_email).present?
+          ZoomSmsSender.delay_for(5.seconds).provider_update_to_client(self.id) if client.client_setting.try(:provider_update_sms).present?
+          ZoomNotificationMailer.delay_for(5.seconds).provider_update_to_client(self.id) if client.client_setting.try(:provider_update_email).present?
+        end
       else
         if self.status == 'open' && provider.present?
           ZoomSmsSender.delay_for(5.seconds).job_updated_to_provider(self.id, self.provider_id) if provider.setting.try(:sms).present?

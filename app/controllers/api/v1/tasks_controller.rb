@@ -1,24 +1,26 @@
 #Base controller which inherited by every api controller
 class Api::V1::TasksController < Api::V1::BaseController
-  before_action :authenticate_agent! , only: [:index_mytasks, :index_mytasks_calendar, :upload, :summary]
+  before_action :authenticate_agent!, only: [:index_mytasks, :index_mytasks_calendar, :upload, :summary]
   before_action :authenticate_client!, only: [:create, :destroy, :update]
-  before_action :authenticate_provider!, only: [:accept, :complete]
-  before_action :find_mytask!, only: [:destroy, :upload, :update, :complete]
+  before_action :authenticate_provider!, only: [:accept, :complete, :index_findtasks, :cancel]
+  before_action :find_mytask!, only: [:destroy, :upload, :update, :complete, :cancel]
   before_action :find_task!, only: [:show, :accept]
-
-  # def index
-  #   params[:offset] = 0 if params[:offset].blank?
-  #   if params[:limit].blank?
-  #     tasks = Task.all
-  #   else
-  #     tasks = Task.order(status: :desc, datetime: :desc).limit(params[:limit]).offset(params[:offset])
-  #     moredata = !Task.order(status: :desc, datetime: :desc).limit(1).offset(params[:offset].to_i + params[:limit].to_i).nil?
-  #   end
-  #   render json: {tasks: tasks, moredata: moredata}
-  # end
 
   def show
     render json: @task
+  end
+
+  def index_findtasks
+    params[:offset] = 0 if params[:offset].blank?
+    zo_id = current_provider.zoom_office_id
+    tasks = Task.where(status: 'open', provider_id: nil, zoom_office_id: zo_id)
+    if params[:limit].blank?
+      res = tasks.order(status: :desc, datetime: :desc)
+    else
+      res = tasks.order(status: :desc, datetime: :desc).limit(params[:limit]).offset(params[:offset])
+      moredata = !tasks.order(status: :desc, datetime: :desc).limit(1).offset(params[:offset].to_i+params[:limit].to_i).blank?
+    end
+    render json: {tasks: res, moredata: moredata}
   end
 
   def index_mytasks
@@ -175,6 +177,15 @@ class Api::V1::TasksController < Api::V1::BaseController
       render json: @task
     rescue
       render json: {errors: "The task can't be completed."}, status: 403
+    end
+  end
+
+  def cancel
+    begin
+      @task.update!(provider_id: nil)
+      render json: @task
+    rescue
+      render json: {errors: "You can't cancel the task."}, status: 403
     end
   end
 
