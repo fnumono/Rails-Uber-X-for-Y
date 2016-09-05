@@ -13,4 +13,9 @@ class ApplicationController < ActionController::Base
       << :city << :state	<< :zip << :phone1 << :phone2 << :photo << :proofinsurance << :driverlicense \
       << :addrlat << :addrlng << :zoom_office_id
   end
+
+  # set active admin timezone
+  def set_admin_timezone
+    Time.zone = 'Pacific Time (US & Canada)'
+  end
 end
