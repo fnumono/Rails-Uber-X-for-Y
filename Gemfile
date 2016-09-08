@@ -47,6 +47,7 @@ end
 
 group :production do
   gem 'rails_12factor'
+  gem 'airbrake', '~> 5.1'
 end
 
 ########################################
@@ -65,7 +66,6 @@ gem 'sinatra'
 gem 'twilio-ruby'
 gem 'stripe'
 gem 'rubocop', require: false
-gem 'airbrake', '~> 5.1'
 gem 'aws-sdk', '< 2.0'
 gem 'unicorn'
 gem 'sidetiq'

@@ -114,8 +114,8 @@ class Api::V1::EscrowHoursController < Api::V1::BaseController
 
   rescue Stripe::CardError => e
     render json: {error: e.message}, status: 422 and return
-  rescue => e
-    render json: {error: 'Invalid request error.'}, status: 400 and return
+  # rescue => e
+  #   render json: {error: 'Invalid request error.'}, status: 400 and return
   end
 
   private
