@@ -3,9 +3,15 @@ ActiveAdmin.register Client do
 	# See permitted parameters documentation:
 	# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 	#
-	permit_params :fname, :lname, :email, :address1, :address2, :phone1, :phone2, :photo  ,	\
-								:city, :state, :zip, :zoom_office_id, :password, :banned
-								# escrow_hour_attributes: [:hoursavail, :hoursused, :escrowavail, :escrowused]
+
+	permit_params do
+	  permitted = [:fname, :lname, :email, :address1, :address2, :phone1, :phone2, :photo  ,	\
+								:city, :state, :zip, :zoom_office_id, :password, :banned]
+		if current_admin.email == 'superadmin@zoomerrands.com'
+	  	permitted << [escrow_hour_attributes: [:hoursavail, :hoursused, :escrowavail, :escrowused]]
+	  end
+	  permitted
+	end
 
 	controller do
     def scoped_collection
@@ -105,14 +111,14 @@ ActiveAdmin.register Client do
 		  # f.input :zoom_office, :label => "Genre", as: :select, multiple: true, :collection => Genre.all.map{ |genre| [genre.name, genre.id] }, :prompt => 'Select one'
 	  	f.input :zoom_office, as: :select, multiple: false, :collection => ZoomOffice.all.map{ |office| [office.longName, office.id] }, :prompt => 'Select one'
 	  	f.input :banned
-	  	# f.inputs  do
-	  	# 	f.has_many :escrow_hour, heading: 'Escrow Hour', new_record: false do |a|
-    #     	a.input :hoursavail
-    #     	a.input :hoursused
-    #     	a.input :escrowavail
-    #     	a.input :escrowused
-    #   	end
-    #   end
+	  	if current_admin.email == 'superadmin@zoomerrands.com'
+		  	f.inputs  'Escrow Hour', for: [:escrow_hour, f.object.escrow_hour || EscrowHour.new]  do |a|
+	      	a.input :hoursavail
+	      	a.input :hoursused
+	      	a.input :escrowavail
+	      	a.input :escrowused
+	      end
+	    end
 	  end
 	  f.actions         # adds the 'Submit' and 'Cancel' buttons
 	end
