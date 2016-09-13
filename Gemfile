@@ -47,8 +47,9 @@ end
 
 group :production do
   gem 'rails_12factor'
-  gem 'airbrake', '~> 5.1'
 end
+
+gem 'airbrake', '~> 5.1'
 
 ########################################
 gem 'devise', '~> 3.2'
