@@ -1,14 +1,13 @@
 Job Changed
 
 Dear <%= @provider.fname %> <%= @provider.lname %>, your job was changed
-Title:  <%= @task.title %>
-Datetime: <%= @task.datetime %> 
-Service Category: <%= @task.type.name %> 
-City: <%= @task.city %>  
-Require purchase: <%= @task.escrowable %> 
-Job Notes: <%= @task.details %> 
+Datetime: <%= @task.datetime %>
+Service Category: <%= @task.type.name %>
+City: <%= @task.city %>
+Require purchase: <%= @task.escrowable %>
+Job Notes: <%= @task.details %>
 -----------------------------------
-Client Name: <%= @client.fname %> <%= @client.lname %> 
+Client Name: <%= @client.fname %> <%= @client.lname %>
 Click <%= @taskurl %> to check the changed job.
 
 

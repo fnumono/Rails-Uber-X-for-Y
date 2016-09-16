@@ -1,5 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "info@zoomerrands.com"
+  default from: Settings.support_email
   layout 'mailer'
-  
+
 end
