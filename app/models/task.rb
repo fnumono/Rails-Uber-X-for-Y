@@ -12,7 +12,7 @@ class Task < ActiveRecord::Base
   after_update :send_notifications
 
   validates_presence_of :type, :zoom_office, :datetime, :frequency, :address, :addrlat, :addrlng
-  validates_presence_of :pick_up_address, :pick_up_addrlat, :pick_up_addrlng, if: "type.try(:name) == 'Delivery'"
+  validates_presence_of :pick_up_address, if: "type.try(:name) == 'Delivery'"
 
   def attributes
   	a = super

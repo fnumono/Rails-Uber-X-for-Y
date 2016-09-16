@@ -7,7 +7,8 @@ ActiveAdmin.register Task do
 #
 permit_params :title, :datetime, :address, :contact, :details, :escrowable, :usedHour, :usedEscrow, \
                   :client_id, :provider_id, :status, :type_id, :zoom_office_id, :addrlng, :addrlat, \
-                  task_uploads_attributes: [:upload, :id, :_destroy, :task_id]
+                  :unit, :pick_up_address, :pick_up_addrlat, :pick_up_addrlng, :pick_up_unit, :item, \
+                  :frequency, task_uploads_attributes: [:upload, :id, :_destroy, :task_id]
 # or
 #
 # permit_params do
@@ -62,10 +63,14 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
 			task.type.name if !task.type.nil?
 		end
 		column 'Address', :address, sortable: false
+    column :unit
     column :pick_up_address
+    column :pick_up_unit
+    column :item
 		# column :addrlat
 		# column :addrlng
 		# column 'Escrow Usable', :escrowable
+    column :frequency
 		column 'Escrow Used', :usedEscrow
 		column 'Hours Used', :usedHour
 		column :status
@@ -96,13 +101,16 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
 				task.type.name
 			end
 			row :address
+      row :unit
 			row :addrlat
 			row :addrlng
       row :pick_up_address
+      row :pick_up_unit
       row :pick_up_addrlat
       row :pick_up_addrlng
-
+      row :item
 			row :details
+      row :frequency
 			row :escrowable
 			row :usedHour
 			row :usedEscrow
@@ -138,13 +146,17 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
 	  	f.input :zoom_office, as: :select, multiple: false, \
 	  					:collection => ZoomOffice.all.map{ |office| [office.longName, office.id] }, :prompt => 'Select one'
 	  	f.input :address
+      f.input :unit
 	  	f.input :addrlat
 	  	f.input :addrlng
       f.input :pick_up_address
+      f.input :pick_up_unit
+      f.input :item
       f.input :pick_up_addrlat
       f.input :pick_up_addrlng
 			f.input :contact
 			f.input :details
+      f.input :frequency
 			f.input :escrowable
 			f.input :usedHour
 			f.input :usedEscrow
