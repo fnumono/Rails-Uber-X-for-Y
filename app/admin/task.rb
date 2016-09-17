@@ -2,6 +2,11 @@ ActiveAdmin.register Task do
   config.sort_order = 'datetime_desc'
 	menu priority: 1, label: 'Errands'
 
+  config.clear_action_items!
+
+  action_item :only => :index do
+      link_to "New Errand" , "/admin/tasks/new"
+  end
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
