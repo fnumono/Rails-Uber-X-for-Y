@@ -120,7 +120,7 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
 
     end
 
-    panel "Receipts" do
+    panel "Uploads" do
       table_for task.task_uploads do
         column :upload do |task_upload|
         	link_to image_tag(task_upload.upload.url(:thumb)), task_upload.upload.url
@@ -163,7 +163,7 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
 			f.input :status, as: :select, collection: ['open', 'close'] , :prompt => 'Select one'
 
 			f.inputs do
-				f.has_many :task_uploads, heading: 'Receipts', allow_destroy: true  do |a|
+				f.has_many :task_uploads, heading: 'Uploads', allow_destroy: true  do |a|
 					a.input :upload
 				end
 			end
