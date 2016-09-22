@@ -38,10 +38,11 @@ class ZoomSmsSender
     @taskurl = Settings.angular_url + '/pages/jobalert?id=' + @task.id.to_s
 
     content = "Job Notification \"" + @task.try(:title).to_s + \
-      "\", Datetime: " + @task.datetime.to_s + \
+      "\". Click " + @taskurl + "  to accept job." + \
+      " Datetime: " + @task.datetime.to_s + \
       ", Type: " + @task.type.name + \
-      ", City: " + @task.city.to_s + \
-      ". Click " + @taskurl + "  to accept job"
+      ", City: " + @task.city.to_s
+
 
     self.send_sms(@provider, content)
   end
@@ -53,10 +54,10 @@ class ZoomSmsSender
     @taskurl = Settings.angular_url + '/provider/editjob?id=' + @task.id.to_s
 
     content = "Job changed \"" + @task.try(:title).to_s + \
-      "\", Datetime: " + @task.datetime.to_s + \
+      "\". Click " + @taskurl + "  to check the updated job" + \
+      ", Datetime: " + @task.datetime.to_s + \
       ", Type: " + @task.type.name + \
-      ", City: " + @task.city.to_s + \
-      ". Click " + @taskurl + "  to check the updated job"
+      ", City: " + @task.city.to_s
 
     self.send_sms(@provider, content)
   end
@@ -68,10 +69,10 @@ class ZoomSmsSender
     @taskurl = Settings.angular_url + '/provider/editjob?id=' + @task.id.to_s
 
     content = "Congratulations!  Job awarded \"" + @task.try(:title).to_s + \
-      "\", Datetime: " + @task.datetime.to_s + \
+      "\". Click " + @taskurl + "  to check the updated job" + \
+      ", Datetime: " + @task.datetime.to_s + \
       ", Type: " + @task.type.name + \
-      ", Location: " + @task.address + \
-      ". Click " + @taskurl + "  to check the updated job"
+      ", Location: " + @task.address
 
     self.send_sms(@provider, content)
   end
