@@ -41,4 +41,8 @@ $(document).ready ->
 
   # select2 styling
   $("#provider_setting_attributes_type_ids").select2({width: "40%"})
+  $("#task_type_id").select2({width: "40%"})
+  $("#task_client_id").select2({width: "40%"})
+  $("#task_provider_id").select2({width: "40%"})
+  $("#task_zoom_office_id").select2({width: "20%"})
 

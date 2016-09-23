@@ -56,12 +56,12 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
 			task.zoom_office.longName if !task.zoom_office.nil?
 		end
 		column "Client" do |task|
-			link_to "#{task.client.fname} #{task.client.lname}", admin_client_path(task.client) \
+			link_to name_email(task.client), admin_client_path(task.client) \
 			if !task.client.nil?
 		end
 		column 'Contact #', :contact
 		column 'Provider' do |task|
-    	link_to "#{task.provider.fname} #{task.provider.lname}", admin_provider_path(task.provider) \
+    	link_to name_email(task.provider), admin_provider_path(task.provider) \
     	if !task.provider.nil?
     end
 		column 'Type' do |task|
@@ -94,12 +94,12 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
 				task.zoom_office.longName
 			end
 			row :client do |task|
-				link_to "#{task.client.fname} #{task.client.lname}", admin_client_path(task.client) \
+				link_to name_email(task.client), admin_client_path(task.client) \
 				if !task.client.nil?
 			end
 			row :contact
 			row 'Provider' do |task|
-	    	link_to "#{task.provider.fname} #{task.provider.lname}", admin_provider_path(task.provider) \
+	    	link_to name_email(task.provider), admin_provider_path(task.provider) \
 	    	if !task.provider.nil?
 	    end
 			row 'Type' do |task|
@@ -145,9 +145,9 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
 	  	f.input :type, as: :select, multiple: false, \
 	  					:collection => Type.all.map{ |type| [type.name, type.id] }, :prompt => 'Select one'
 	  	f.input :client, as: :select, multiple: false, \
-	  					:collection => Client.all.map{ |client| [client.fname.to_s + ' ' + client.lname.to_s, client.id] }, :prompt => 'Select one'
+	  					:collection => Client.all.map{ |client| [name_email(client), client.id] }, :prompt => 'Select one'
 	  	f.input :provider, as: :select, multiple: false, \
-	  					:collection => Provider.all.map{ |provider| [provider.fname.to_s + ' ' + provider.lname.to_s, provider.id] }, :prompt => 'Select one'
+	  					:collection => Provider.all.map{ |provider| [name_email(provider), provider.id] }, :prompt => 'Select one'
 	  	f.input :zoom_office, as: :select, multiple: false, \
 	  					:collection => ZoomOffice.all.map{ |office| [office.longName, office.id] }, :prompt => 'Select one'
 	  	f.input :address
