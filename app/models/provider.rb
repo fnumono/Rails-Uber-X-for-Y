@@ -2,10 +2,10 @@ class Provider < ActiveRecord::Base
   # Include default devise modules.
   has_one :setting, dependent: :destroy
   accepts_nested_attributes_for :setting
-  
+
   has_many :tasks
   belongs_to :zoom_office
-  
+
   devise :database_authenticatable, :registerable,
           :recoverable, :rememberable, :trackable, :validatable ,:confirmable, :omniauthable
   include DeviseTokenAuth::Concerns::User
@@ -22,6 +22,8 @@ class Provider < ActiveRecord::Base
   has_attached_file :proofinsurance, styles: { medium: "300x300>", thumb: "300x100!" }, default_url: "/images/:style/missing.png"
   validates_attachment_content_type :proofinsurance, content_type: /\Aimage\/.*\Z/
 
+  validates :phone1, uniqueness: true, if: "phone1.present?"
+
   def attributes
   	a = super
   	a[:photoUrl] = nil
@@ -33,7 +35,7 @@ class Provider < ActiveRecord::Base
 
   def photoUrl
     if !photo.url.nil?
-      url = photo.url(:medium) 
+      url = photo.url(:medium)
       url = Settings.host_url + url if url[0..3] != 'http'
       url
     end
@@ -41,7 +43,7 @@ class Provider < ActiveRecord::Base
 
   def photoThumbUrl
     if !photo.url.nil?
-      url = photo.url(:thumb) 
+      url = photo.url(:thumb)
       url = Settings.host_url + url if url[0..3] != 'http'
       url
     end
@@ -49,7 +51,7 @@ class Provider < ActiveRecord::Base
 
   def driverUrl
     if !driverlicense.url.nil?
-      url = driverlicense.url(:thumb) 
+      url = driverlicense.url(:thumb)
       url = Settings.host_url + url if url[0..3] != 'http'
       url
     end
@@ -57,7 +59,7 @@ class Provider < ActiveRecord::Base
 
   def proofUrl
     if !proofinsurance.url.nil?
-      url = proofinsurance.url(:thumb) 
+      url = proofinsurance.url(:thumb)
       url = Settings.host_url + url if url[0..3] != 'http'
       url
     end

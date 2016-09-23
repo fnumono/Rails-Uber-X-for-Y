@@ -20,7 +20,8 @@ class Client < ActiveRecord::Base
   has_attached_file :photo, styles: { medium: "160x160!", thumb: "40x40!" }, default_url: "/images/:style/missing.png"
   validates_attachment_content_type :photo, content_type: /\Aimage\/.*\Z/
 
-  
+  validates :phone1, uniqueness: true, if: "phone1.present?"
+
   # Override Devise::Confirmable#after_confirmation
   def after_confirmation
     self.notifications.create(notify_type: Settings.notify_user, name: 'Signed up successfully.', \
@@ -33,7 +34,7 @@ class Client < ActiveRecord::Base
             text: 'Confirmation email has been sent to ' + self.email + '.')
     self.create_client_setting
   end
-  
+
   def attributes
   	a = super
   	a[:photoUrl] = nil
@@ -42,24 +43,24 @@ class Client < ActiveRecord::Base
   	a
   end
 
-  def photoUrl  
+  def photoUrl
     if !photo.url.nil?
-    	url = photo.url(:medium) 
+    	url = photo.url(:medium)
       url = Settings.host_url + url if url[0..3] != 'http'
       url
     end
-  end  
+  end
 
-  def photoThumbUrl  
+  def photoThumbUrl
     if !photo.url.nil?
-      url = photo.url(:thumb) 
+      url = photo.url(:thumb)
       url = Settings.host_url + url if url[0..3] != 'http'
       url
     end
-  end 
+  end
 
   private
     def release_task
       self.tasks = []
-    end 
+    end
 end
