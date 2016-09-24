@@ -65,9 +65,11 @@ class Task < ActiveRecord::Base
     end
 
     def send_job_alert
+      return true if self.provider.present?
+
       provider_ids = []
       providers = select_nearest_sametype_providers(5)
-      providers.find_each do |provider|
+      providers.each do |provider|
         provider_ids << provider.id
         ZoomSmsSender.delay_for(5.seconds).job_alert_to_provider(self.id, provider.id) if provider.setting.try(:sms).present?
         ZoomNotificationMailer.delay_for(5.seconds).job_alert_to_provider(self.id, provider.id) if provider.setting.try(:email).present?

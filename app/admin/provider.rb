@@ -80,7 +80,7 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 	  	provider.setting.delivery
 	  end
 	  column :types do |provider|
-		  	provider.setting.types.map { |type| type.name  }
+		  	provider.setting.types.pluck(:name).to_sentence
 		  end
 	  column :active
 
@@ -140,7 +140,7 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 		  	provider.setting.delivery
 		  end
 		  row :types do |provider|
-		  	provider.setting.types.map { |type| type.name  }
+		  	provider.setting.types.pluck(:name).to_sentence
 		  end
 		  row :created_at
 		  row :updated_at
