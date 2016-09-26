@@ -47,13 +47,7 @@ class Task < ActiveRecord::Base
 
           send_job_alert
         else
-          ZoomSmsSender.delay_for(5.seconds).job_awarded_to_provider(self.id, self.provider_id) if provider.setting.try(:sms).present?
-          # send award email to both prvider and support
-          ZoomNotificationMailer.delay_for(5.seconds).job_awarded_to_provider(self.id, self.provider_id) if provider.setting.try(:email).present?
-          ZoomNotificationMailer.delay_for(5.seconds).job_awarded_to_support(self.id, self.provider_id)
-
-          ZoomSmsSender.delay_for(5.seconds).provider_update_to_client(self.id) if client.client_setting.try(:provider_update_sms).present?
-          ZoomNotificationMailer.delay_for(5.seconds).provider_update_to_client(self.id) if client.client_setting.try(:provider_update_email).present?
+          send_job_awarded_to_provider
         end
       else
         if self.status == 'open' && provider.present?
@@ -61,24 +55,32 @@ class Task < ActiveRecord::Base
           ZoomNotificationMailer.delay_for(5.seconds).job_updated_to_provider(self.id, self.provider_id) if provider.setting.try(:email).present?
         end
       end
-
     end
 
     def send_job_alert
-      return true if self.provider.present?
-
       provider_ids = []
-      providers = select_nearest_sametype_providers(5)
-      providers.each do |provider|
-        provider_ids << provider.id
-        ZoomSmsSender.delay_for(5.seconds).job_alert_to_provider(self.id, provider.id) if provider.setting.try(:sms).present?
-        ZoomNotificationMailer.delay_for(5.seconds).job_alert_to_provider(self.id, provider.id) if provider.setting.try(:email).present?
+      providers = provider.present? ? [provider] : select_nearest_sametype_providers(5)
+
+      providers.each do |p|
+        provider_ids << p.id
+        ZoomSmsSender.delay_for(5.seconds).job_alert_to_provider(self.id, p.id) if p.setting.try(:sms).present?
+        ZoomNotificationMailer.delay_for(5.seconds).job_alert_to_provider(self.id, p.id) if p.setting.try(:email).present?
       end
 
       ZoomNotificationMailer.delay_for(5.seconds).job_alert_to_support(self.id, provider_ids)
 
-      self.client.notifications.create(notify_type: Settings.notify_errand, name: 'New Errand Posted', \
+      client.notifications.create(notify_type: Settings.notify_errand, name: 'New Errand Posted', \
             text: 'You posted a new errand ' + self.try(:title).to_s + '.')
+    end
+
+    def send_job_awarded_to_provider
+      ZoomSmsSender.delay_for(5.seconds).job_awarded_to_provider(self.id, self.provider_id) if provider.setting.try(:sms).present?
+      # send award email to both prvider and support
+      ZoomNotificationMailer.delay_for(5.seconds).job_awarded_to_provider(self.id, self.provider_id) if provider.setting.try(:email).present?
+      ZoomNotificationMailer.delay_for(5.seconds).job_awarded_to_support(self.id, self.provider_id)
+
+      ZoomSmsSender.delay_for(5.seconds).provider_update_to_client(self.id) if client.client_setting.try(:provider_update_sms).present?
+      ZoomNotificationMailer.delay_for(5.seconds).provider_update_to_client(self.id) if client.client_setting.try(:provider_update_email).present?
     end
 
     def select_nearest_sametype_providers(limit)

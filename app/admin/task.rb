@@ -36,11 +36,11 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
 
 	controller do
     def scoped_collection
-    	if current_admin.email == 'superadmin@zoomerrands.com'
-    		end_of_association_chain
+      if current_admin.email == 'superadmin@zoomerrands.com'
+    		end_of_association_chain.includes(:zoom_office, :client, :type, :provider)
     	else
     		office = current_admin.zoom_office
-      	end_of_association_chain.where(zoom_office: office)
+      	end_of_association_chain.includes(:zoom_office, :client, :type, :provider).where(zoom_office: office)
       end
     end
   end
