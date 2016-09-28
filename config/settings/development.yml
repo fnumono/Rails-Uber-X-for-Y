@@ -6,8 +6,8 @@ facebook:
   secret: 0313f4e1a4cb8e894a741f2f888d0be2
 
 google:
-  key: 958055516479-8gttm4lgu9rmfv85ksku23ime1268rk7.apps.googleusercontent.com
-  secret: 8-cJsnBVAg9n0Yzusl_ZqiXv
+  key: 474946006162-uajhr7fbm4rh6puv8o0kgeqeq1h9a9vk.apps.googleusercontent.com
+  secret: P8qiKdia5j2iPZb6k_dErWSK
 
 stripe_publish_key: pk_test_YH06zNfVEQqzGET9dTJaAWcZ
-stripe_secret_key: sk_test_HfZ1fWSjJbhVOJxxajBnbgwI 
+stripe_secret_key: sk_test_HfZ1fWSjJbhVOJxxajBnbgwI
