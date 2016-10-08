@@ -7,6 +7,10 @@ ActiveAdmin.register Task do
   action_item :only => :index do
       link_to "New Errand" , "/admin/tasks/new"
   end
+
+  action_item :only => :show do
+      link_to "Edit Errand" , edit_admin_task_path(task)
+  end
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
@@ -141,7 +145,7 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
 
 	  f.inputs "Task" do          # builds an input field for every attribute
 	  	f.input :title, :required => true
-	  	f.input :datetime
+	  	f.input :datetime, as: :datetime_picker
 	  	f.input :type, as: :select, multiple: false, \
 	  					:collection => Type.all.map{ |type| [type.name, type.id] }, :prompt => 'Select one'
 	  	f.input :client, as: :select, multiple: false, \

@@ -80,8 +80,9 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 	  	provider.setting.delivery
 	  end
 	  column :types do |provider|
-		  	provider.setting.types.pluck(:name).to_sentence
-		  end
+	  	str_types = provider.setting.types.pluck(:name).to_sentence
+	  	"#{str_types[0..40]}...(#{provider.setting.types.length})"
+	  end
 	  column :active
 
 
