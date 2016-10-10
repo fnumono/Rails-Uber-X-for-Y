@@ -140,12 +140,17 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
     active_admin_comments
   end
 
+  increment = 15.minutes
+  ss = Array.new(24.hours/increment) do |i|
+    Time.at(i*increment + 0.hours).utc.strftime("%H:%M")
+  end
+
   form do |f|
 	  f.semantic_errors # shows errors on :base
 
 	  f.inputs "Task" do          # builds an input field for every attribute
 	  	f.input :title, :required => true
-	  	f.input :datetime, as: :datetime_picker
+	  	f.input :datetime, as: :date_time_picker, datepicker_options: { allowTimes: ss }
 	  	f.input :type, as: :select, multiple: false, \
 	  					:collection => Type.all.map{ |type| [type.name, type.id] }, :prompt => 'Select one'
 	  	f.input :client, as: :select, multiple: false, \
