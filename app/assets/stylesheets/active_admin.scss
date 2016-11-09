@@ -20,3 +20,14 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
+
+.index.admin_tasks {  
+  #title_bar{
+    #titlebar_right {
+      text-align: left;
+    }
+    #titlebar_left {
+      width: 300px;
+    }
+  }  
+}

@@ -49,6 +49,24 @@ permit_params :title, :datetime, :address, :contact, :details, :escrowable, :use
     end
   end
 
+  filter :client, :collection => proc {(Client.all).map{|c| [name_email(c), c.id]}}
+  filter :provider, :collection => proc {(Client.all).map{|c| [name_email(c), c.id]}}
+  filter :type
+  filter :zoom_office, collection: proc{(ZoomOffice.all).map{|o| [o.longName, o.id]}}, if: proc{current_admin.email == 'superadmin@zoomerrands.com'}
+  filter :title, as: :string
+  filter :datetime, label: 'Errand Date'
+  filter :address
+  filter :pick_up_address
+  filter :item
+  filter :contact
+  filter :details
+  filter :escrowable
+  filter :usedHour
+  filter :usedEscrow
+  filter :status
+  # filter :city
+  filter :frequency
+
 	index :title => 'Errands' do
 		selectable_column
 		column :id

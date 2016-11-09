@@ -7,6 +7,12 @@ permit_params :fname, :lname, :email, :address1, :address2, :phone1, :active, :d
 		:proofinsurance,	:phone2, :photo, :city, :state, :zip, :addrlat, :addrlng, :zoom_office_id, \
 		:password, setting_attributes:[type_ids:[]]
 
+	ZoomOffice.all.each do |office|
+		scope office.longName, if: proc { current_admin.email == 'superadmin@zoomerrands.com' || office == current_admin.zoom_office } do |providers|
+		  providers.where(zoom_office: office, active: true)
+		end
+	end
+
 	controller do
     def scoped_collection
     	if current_admin.email == 'superadmin@zoomerrands.com'
