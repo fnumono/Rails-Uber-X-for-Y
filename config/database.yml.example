@@ -17,6 +17,10 @@ default: &default
 development:
   <<: *default
   database: zoom_errands
+  username: postgres
+  password: zoom12345
+  host: zoomerds1.cidcjzz8wdwn.us-west-1.rds.amazonaws.com
+  pool: 10
   
 
 # Warning: The database defined as "test" will be erased and
@@ -31,7 +35,7 @@ production:
   database: zoom_errands
   username: postgres
   password: zoom12345
-  host: zoomrds.cidcjzz8wdwn.us-west-1.rds.amazonaws.com
+  host: zoomrds1.cidcjzz8wdwn.us-west-1.rds.amazonaws.com
   pool: 10
   # port: 5432
   # socket: /tmp/postgresql.sock
