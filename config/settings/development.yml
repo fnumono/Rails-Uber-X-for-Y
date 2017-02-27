@@ -9,5 +9,5 @@ google:
   key: 474946006162-uajhr7fbm4rh6puv8o0kgeqeq1h9a9vk.apps.googleusercontent.com
   secret: P8qiKdia5j2iPZb6k_dErWSK
 
-stripe_publish_key: pk_test_YH06zNfVEQqzGET9dTJaAWcZ
-stripe_secret_key: sk_test_HfZ1fWSjJbhVOJxxajBnbgwI
+stripe_publish_key: pk_test_9MLCt7tfGDELF03VZN7u4b7h 
+stripe_secret_key: sk_test_SoecKP7tInvHVFjxlu0egAFH
