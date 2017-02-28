@@ -50,7 +50,7 @@ group :production do
 end
 
 gem 'airbrake', '~> 5.1'
-
+gem 'jquery-ui-rails', '~> 4.2.1'
 ########################################
 gem 'devise', '~> 3.2'
 gem 'devise_token_auth'
